@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
                             .apply()
                         val intent = Intent(this, DashboardActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
                     }

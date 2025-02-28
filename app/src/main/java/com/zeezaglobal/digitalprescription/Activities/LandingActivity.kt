@@ -27,6 +27,7 @@ class LandingActivity : AppCompatActivity() {
             // Create an intent to navigate to the new activity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
         registerBtn.setOnClickListener {
             // Create an intent to navigate to the new activity
