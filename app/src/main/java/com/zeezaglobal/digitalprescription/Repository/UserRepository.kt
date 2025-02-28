@@ -2,6 +2,8 @@ package com.zeezaglobal.digitalprescription.Repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.zeezaglobal.digitalprescription.DTO.LoginData
+import com.zeezaglobal.digitalprescription.DTO.LoginResponse
 import com.zeezaglobal.digitalprescription.Entity.User
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
 import retrofit2.Call
@@ -11,23 +13,25 @@ import retrofit2.Response
 class UserRepository {
     private val apiService = RetrofitClient.apiService
 
-    fun getUser(userId: Int): LiveData<User?> {
-        val userLiveData = MutableLiveData<User?>()
+    fun login(email: String, password: String): LiveData<String?> {
+        val token = MutableLiveData<String?>()
+        val user = LoginData(email, password)
 
-        apiService.getUser(userId).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        apiService.login(user).enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    userLiveData.postValue(response.body())
+                    val responseBody = response.body()
+                    token.postValue(responseBody?.token) // Store the token from the response
                 } else {
-                    userLiveData.postValue(null)
+                    token.postValue(null) // API returned an error response
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                userLiveData.postValue(null)
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                token.postValue(null) // Handle network failure
             }
         })
 
-        return userLiveData
+        return token
     }
 }

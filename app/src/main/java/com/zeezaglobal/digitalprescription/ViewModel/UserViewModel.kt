@@ -8,7 +8,7 @@ import com.zeezaglobal.digitalprescription.Repository.UserRepository
 class UserViewModel : ViewModel() {
     private val repository = UserRepository()
 
-    fun getUser(userId: Int): LiveData<User?> {
-        return repository.getUser(userId)
+    fun login(email: String, password: String): LiveData<String?> {
+        return repository.login(email, password)
     }
 }

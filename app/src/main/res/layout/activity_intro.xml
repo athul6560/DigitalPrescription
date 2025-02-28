@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".Activities.IntroActivity">
+    tools:context=".Activities.LoginActivity">
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/login_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress2"
+        android:id="@+id/email_edittext"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
@@ -31,7 +31,7 @@
         android:background="@drawable/edittext_rounded"
         android:ems="10"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/login_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,8 +43,8 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/poppins"
         android:text="Email"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress2"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress2" />
+        app:layout_constraintBottom_toTopOf="@+id/email_edittext"
+        app:layout_constraintStart_toStartOf="@+id/email_edittext" />
 
     <TextView
         android:id="@+id/textView12"
@@ -54,11 +54,11 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins"
         android:text="Password"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword4"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2" />
+        app:layout_constraintStart_toStartOf="@+id/password_edittext"
+        app:layout_constraintTop_toBottomOf="@+id/email_edittext" />
 
     <EditText
-        android:id="@+id/editTextTextPassword4"
+        android:id="@+id/password_edittext"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
@@ -94,9 +94,9 @@
         android:textColor="@color/very_light_grey"
         android:text="By logging into your account, you acknowledge and agree to our privacy policy."
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword4"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword4"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword4" />
+        app:layout_constraintEnd_toEndOf="@+id/password_edittext"
+        app:layout_constraintStart_toStartOf="@+id/password_edittext"
+        app:layout_constraintTop_toBottomOf="@+id/password_edittext" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

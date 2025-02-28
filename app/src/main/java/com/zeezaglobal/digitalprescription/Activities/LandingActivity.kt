@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.zeezaglobal.digitalprescription.R
 
-class MainActivity : AppCompatActivity() {
+class LandingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,12 +25,12 @@ class MainActivity : AppCompatActivity() {
         // Set an onClickListener on the "Next" button
         loginBtn.setOnClickListener {
             // Create an intent to navigate to the new activity
-            val intent = Intent(this, IntroActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
         registerBtn.setOnClickListener {
             // Create an intent to navigate to the new activity
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
     }
