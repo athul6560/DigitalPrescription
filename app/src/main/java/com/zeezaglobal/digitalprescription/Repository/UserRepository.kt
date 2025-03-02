@@ -14,9 +14,9 @@ import retrofit2.Response
 
 class UserRepository {
     private val apiService = RetrofitClient.apiService
-    fun register(email: String, password: String, username: String): LiveData<PostApiResponse?> {
+    fun register(email: String, password: String): LiveData<PostApiResponse?> {
         val liveData = MutableLiveData<PostApiResponse?>()
-        val user = RegisterData(email,password, username)
+        val user = RegisterData(password, email)
 
         apiService.register(user).enqueue(object : Callback<PostApiResponse> {
             override fun onResponse(call: Call<PostApiResponse>, response: Response<PostApiResponse>) {

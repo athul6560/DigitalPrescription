@@ -8,6 +8,8 @@
 
     tools:context=".Activities.LoginActivity">
 
+
+
     <Button
         android:id="@+id/login_btn"
         android:layout_width="match_parent"
@@ -18,6 +20,19 @@
         style="@style/DefaultButtonStyle"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+android:visibility="gone"
+
+        android:layout_marginBottom="16dp"
+
+        android:indeterminate="true"
+        app:layout_constraintBottom_toTopOf="@+id/login_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
