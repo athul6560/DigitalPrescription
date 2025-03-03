@@ -38,19 +38,25 @@ class LoginActivity : AppCompatActivity() {
                 progressBar.visibility = ProgressBar.VISIBLE
                 authViewModel.login(email, password).observe(this, Observer { token ->
                     progressBar.visibility = ProgressBar.GONE
-                    if (!token.isNullOrEmpty()) {
-                        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                    if (token != null) {
+                        if (!token.token.isNullOrEmpty()) {
+                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
-                        // Save token in SharedPreferences
-                        getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                            .edit()
-                            .putString("jwt_token", token) // `token` is already a String
-                            .apply()
-                        val intent = Intent(this, DashboardActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+                            // Save token in SharedPreferences
+                            getSharedPreferences("APP_PREFS", MODE_PRIVATE)
+                                .edit()
+                                .putString("jwt_token", token.token) // `token` is already a String
+                                .apply()
+                            getSharedPreferences("APP_PREFS", MODE_PRIVATE)
+                                .edit()
+                                .putInt("user_id", token.user.id) // `token` is already a String
+                                .apply()
+                            val intent = Intent(this, DoctorDeatilsActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 })
             } else {

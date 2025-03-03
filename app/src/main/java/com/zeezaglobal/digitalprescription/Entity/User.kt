@@ -1,9 +1,7 @@
 package com.zeezaglobal.digitalprescription.Entity
 
 data class User(
-
-    val email: String,
-    val password: String,
+    val id: Int,
     val username: String,
-    val token: String? = null
+    val roles: List<String>
 )
