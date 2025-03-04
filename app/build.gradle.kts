@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.zxingVersion)
     implementation(libs.material)
     implementation(libs.material)
     implementation(libs.androidx.activity)

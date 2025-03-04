@@ -47,7 +47,9 @@ class HomeFragment : Fragment() {
         // Retrieve token and doctorId from SharedPreferences or arguments
         val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
         val token = sharedPreferences.getString("jwt_token", "") ?: ""
-        val doctorId = DoctorId(1) // Replace with actual doctor ID, possibly passed as an argument
+        val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong() ?: 0L // Default to 0L if -1
+
+        val doctorId = DoctorId(id)// Replace with actual doctor ID, possibly passed as an argument
 
         if (token.isNotEmpty()) {
             viewModel.getDoctor(token, doctorId)

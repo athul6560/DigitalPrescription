@@ -8,8 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-      >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/textView17"
@@ -17,10 +16,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="Prescriptions"
-            android:textSize="20sp"
-            android:textColor="@color/black"
             android:fontFamily="@font/poppins_medium"
+            android:text="Prescriptions"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,13 +41,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Search Drug"
             android:fontFamily="@font/poppins_bold"
+            android:text="Search Drug"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
-        <EditText
-            android:id="@+id/editTextText5"
+        <AutoCompleteTextView
+            android:id="@+id/search_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -73,17 +72,17 @@
             android:text="Duration"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
+            app:layout_constraintTop_toBottomOf="@+id/search_edittext" />
 
         <RadioGroup
+            android:id="@+id/radio_group_duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:orientation="horizontal"
-
             android:gravity="center_horizontal"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView19">
@@ -92,57 +91,106 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="5 \ndays"
-                android:padding="5dp"
+                android:background="@drawable/button_selector"
+                android:button="@null"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
-                android:button="@null"
-                android:background="@drawable/button_selector" />
+                android:padding="5dp"
+                android:text="5 \ndays" />
 
             <RadioButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="10 \ndays"
-                android:fontFamily="@font/poppins_medium"
-                android:padding="5dp"
-                android:gravity="center"
+                android:background="@drawable/button_selector"
                 android:button="@null"
-                android:background="@drawable/button_selector" />
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="10 \ndays" />
 
             <RadioButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp"
-                android:fontFamily="@font/poppins_medium"
-                android:text="15 \ndays"
+                android:background="@drawable/button_selector"
                 android:button="@null"
+                android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
-                android:background="@drawable/button_selector" />
+                android:padding="5dp"
+                android:text="15 \ndays" />
 
             <RadioButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="30 \ndays"
-                android:fontFamily="@font/poppins_medium"
-                android:padding="5dp"
+                android:background="@drawable/button_selector"
                 android:button="@null"
+                android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
-                android:background="@drawable/button_selector" />
+                android:padding="5dp"
+                android:text="30 \ndays" />
 
             <RadioButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="60 \ndays"
-                android:fontFamily="@font/poppins_medium"
-                android:padding="5dp"
+                android:background="@drawable/button_selector"
                 android:button="@null"
+                android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
-                android:background="@drawable/button_selector" />
+                android:padding="5dp"
+                android:text="60 \ndays" />
         </RadioGroup>
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/custom_button_background"
+            android:text="Generate"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/drug_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radio_group_duration" />
+
+        <EditText
+            android:id="@+id/remark_feild"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/edittext_rounded"
+            android:ems="10"
+            android:fontFamily="@font/poppins"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Remarks"
+            app:layout_constraintStart_toStartOf="@+id/remark_feild"
+            app:layout_constraintTop_toBottomOf="@+id/drug_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
