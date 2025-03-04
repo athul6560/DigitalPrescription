@@ -98,7 +98,7 @@
             app:layout_constraintTop_toTopOf="@+id/name">
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/date_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -111,7 +111,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/month_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -119,8 +119,8 @@
                 android:text="Dec"
                 android:textColor="@color/very_light_grey"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView11"
-                app:layout_constraintStart_toEndOf="@+id/textView11" />
+                app:layout_constraintBottom_toBottomOf="@+id/date_textview"
+                app:layout_constraintStart_toEndOf="@+id/date_textview" />
 
             <TextView
                 android:id="@+id/textView16"
