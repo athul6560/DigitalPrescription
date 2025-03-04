@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
+import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.DTO.DoctorResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
@@ -15,7 +16,25 @@ import retrofit2.Response
 
 class DoctorRepository() {
     private val apiService = RetrofitClient.apiService
+    fun getDoctor(token: String, doctorId: DoctorId): LiveData<DoctorResponse?> {
+        val doctorLiveData = MutableLiveData<DoctorResponse?>()
 
+        apiService.getDoctor("Bearer $token", doctorId.id).enqueue(object : Callback<DoctorResponse> {
+            override fun onResponse(call: Call<DoctorResponse>, response: Response<DoctorResponse>) {
+                if (response.isSuccessful) {
+                    doctorLiveData.postValue(response.body())
+                } else {
+                    doctorLiveData.postValue(null)
+                }
+            }
+
+            override fun onFailure(call: Call<DoctorResponse>, t: Throwable) {
+                doctorLiveData.postValue(null)
+            }
+        })
+
+        return doctorLiveData
+    }
 
     fun updateDoctor(token: String, doctorDetails: DoctorDetailsDTO): LiveData<DoctorResponse?> {
         val liveData = MutableLiveData<DoctorResponse>()

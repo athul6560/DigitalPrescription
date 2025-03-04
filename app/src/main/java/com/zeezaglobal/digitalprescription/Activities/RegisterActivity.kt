@@ -35,12 +35,12 @@ class RegisterActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val passwordEditText = findViewById<EditText>(R.id.editTextTextPassword)
         val registerButton = findViewById<Button>(R.id.button)
-
+      val  confirmPasswordEditText = findViewById<EditText>(R.id.editTextConfirmPassword)
         // Handle the Register Button click
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-
+            val confirmPassword = confirmPasswordEditText.text.toString().trim()
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 // Validate the email format
                 if (!isValidEmail(email)) {
@@ -48,6 +48,10 @@ class RegisterActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
+                if (password != confirmPassword) {
+                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 // Validate password format
                 if (!isValidPassword(password)) {
                     Toast.makeText(this, "Password must be at least 6 characters, contain upper and lower case letters, and include a number", Toast.LENGTH_SHORT).show()

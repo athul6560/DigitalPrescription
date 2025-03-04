@@ -2,12 +2,18 @@ package com.zeezaglobal.digitalprescription.Activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.RestApi.ApiService
+import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LandingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +27,7 @@ class LandingActivity : AppCompatActivity() {
         }
         val loginBtn: AppCompatButton = findViewById(R.id.login_btn)
         val registerBtn: AppCompatButton = findViewById(R.id.register_btn)
-
+        validateToken()
         // Set an onClickListener on the "Next" button
         loginBtn.setOnClickListener {
             // Create an intent to navigate to the new activity
@@ -34,5 +40,22 @@ class LandingActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun validateToken() {
+        val sharedPreferences = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
+        val token = sharedPreferences.getString("jwt_token", null)
+
+        if (token.isNullOrEmpty()) {
+            return // No token found, stay on the landing page
+        }
+
+   else{
+            startActivity(Intent(this@LandingActivity, DashboardActivity::class.java))
+            finish()
+
+        }
+
+
     }
 }

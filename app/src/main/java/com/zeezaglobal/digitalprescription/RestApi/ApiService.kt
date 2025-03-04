@@ -2,6 +2,7 @@ package com.zeezaglobal.digitalprescription.RestApi
 
 import com.zeezaglobal.digitalprescription.Activities.DoctorDeatilsActivity
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
+import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.DTO.DoctorResponse
 import com.zeezaglobal.digitalprescription.DTO.LoginData
 import com.zeezaglobal.digitalprescription.DTO.LoginResponse
@@ -10,9 +11,12 @@ import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.Entity.User
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface ApiService {
@@ -21,6 +25,9 @@ interface ApiService {
 
     @POST("auth/register")
     fun register( @Body registerData: RegisterData): Call<PostApiResponse>
+
+    @GET("doctor/getdata/{doctorId}")
+    fun getDoctor(@Header("Authorization") token: String,  @Path("doctorId") doctorId: Long): Call<DoctorResponse>
 
     @POST("doctor/update")
     fun updateDoctor(@Header("Authorization") token: String, @Body doctorDetails: DoctorDetailsDTO): Call<DoctorResponse>
