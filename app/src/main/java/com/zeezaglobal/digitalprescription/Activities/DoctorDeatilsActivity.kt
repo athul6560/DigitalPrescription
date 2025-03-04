@@ -39,8 +39,8 @@ class DoctorDeatilsActivity : AppCompatActivity() {
         )
          val viewmodel: DoctorViewModel by viewModels()
 
-        val firstNameEditText = findViewById<EditText>(R.id.editTextText)
-        val lastNameEditText = findViewById<EditText>(R.id.editTextText2)
+        val firstNameEditText = findViewById<EditText>(R.id.name_edittext)
+
         val specializationAutoComplete = findViewById<AutoCompleteTextView>(R.id.editTextText3)
         val registrationNumberEditText = findViewById<EditText>(R.id.editTextText4)
         val countryCodeEditText = findViewById<EditText>(R.id.editTextCountryCode)
@@ -54,23 +54,20 @@ class DoctorDeatilsActivity : AppCompatActivity() {
         submitButton.setOnClickListener {
             // Collect Data
             val firstName = firstNameEditText.text.toString().trim()
-            val lastName = lastNameEditText.text.toString().trim()
+            val lastName = ""
             val specialization = specializationAutoComplete.text.toString().trim()
             val registrationNumber = registrationNumberEditText.text.toString().trim()
             val countryCode = countryCodeEditText.text.toString().trim()
             val phoneNumber = phoneNumberEditText.text.toString().trim()
 
             // Validate Inputs
-            if (firstName.isEmpty() || lastName.isEmpty() || specialization.isEmpty() ||
+            if (firstName.isEmpty()  || specialization.isEmpty() ||
                 registrationNumber.isEmpty() || phoneNumber.isEmpty() || countryCode.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (registrationNumber.length != 8) {
-                Toast.makeText(this, "Registration number must be 8 digits", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+
 
             if (!phoneNumber.matches("\\d{10}".toRegex())) {
                 Toast.makeText(this, "Enter a valid 10-digit phone number", Toast.LENGTH_SHORT).show()
