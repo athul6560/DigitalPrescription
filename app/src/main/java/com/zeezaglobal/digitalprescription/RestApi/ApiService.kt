@@ -8,6 +8,7 @@ import com.zeezaglobal.digitalprescription.DTO.LoginData
 import com.zeezaglobal.digitalprescription.DTO.LoginResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
+import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.Entity.User
 import retrofit2.Call
 import retrofit2.http.Body
@@ -31,4 +32,7 @@ interface ApiService {
 
     @POST("doctor/update")
     fun updateDoctor(@Header("Authorization") token: String, @Body doctorDetails: DoctorDetailsDTO): Call<DoctorResponse>
+
+    @POST("api/patients")
+    fun addPatient(@Header("Authorization") token: String, @Body doctorDetails: Patient): Call<Patient>
 }

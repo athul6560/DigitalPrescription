@@ -1,18 +1,25 @@
 package com.zeezaglobal.digitalprescription.Fragments
 
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.zeezaglobal.digitalprescription.DTO.DoctorId
+import com.zeezaglobal.digitalprescription.Entity.Doctor
+import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.Utils.DateUtils
+import com.zeezaglobal.digitalprescription.Utils.SharedPreferencesHelper
 
 class HomeFragment : Fragment() {
 
@@ -20,8 +27,10 @@ class HomeFragment : Fragment() {
         fun newInstance() = HomeFragment()
     }
 
-    private val viewModel: HomeViewModel by viewModels()
 
+    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var token: String
+    private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,6 +41,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        sharedPreferencesHelper = SharedPreferencesHelper(requireContext())
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -42,15 +52,19 @@ class HomeFragment : Fragment() {
         val specialisationTextView: TextView = view.findViewById(R.id.specialisation)
         val dateTextView: TextView = view.findViewById(R.id.date_textview)
         val monthTextView: TextView = view.findViewById(R.id.month_textview)
+        val addPatientTextView: ConstraintLayout = view.findViewById(R.id.add_new_patient)
         dateTextView.setText(DateUtils.getCurrentDate())
         monthTextView.setText(DateUtils.getCurrentMonth())
         // Retrieve token and doctorId from SharedPreferences or arguments
         val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
-        val token = sharedPreferences.getString("jwt_token", "") ?: ""
-        val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong() ?: 0L // Default to 0L if -1
+        token = sharedPreferences.getString("jwt_token", "") ?: ""
+        val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong()
+            ?: 0L // Default to 0L if -1
 
         val doctorId = DoctorId(id)// Replace with actual doctor ID, possibly passed as an argument
-
+        addPatientTextView.setOnClickListener {
+            showCustomPopup()
+        }
         if (token.isNotEmpty()) {
             viewModel.getDoctor(token, doctorId)
                 .observe(viewLifecycleOwner, Observer { doctorResponse ->
@@ -69,5 +83,63 @@ class HomeFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "Token is missing!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showCustomPopup() {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.patient_custom_popup)
+
+        // Find views in the custom layout
+        val title: TextView = dialog.findViewById(R.id.popup_title)
+
+
+        val saveButton: Button = dialog.findViewById(R.id.save_button)
+        val firstName: EditText = dialog.findViewById(R.id.first_name)
+        val dateOfBirth: EditText = dialog.findViewById(R.id.date_of_birth)
+        val gender: EditText = dialog.findViewById(R.id.gender)
+        val contactNumber: EditText = dialog.findViewById(R.id.contact_number)
+        val email: EditText = dialog.findViewById(R.id.email)
+        val address: EditText = dialog.findViewById(R.id.address)
+        val medicalHistory: EditText = dialog.findViewById(R.id.medical_history)
+        // Set title text (optional)
+        title.text = "This is a custom popup!"
+
+        // Close button action
+        saveButton.setOnClickListener {
+            val patientDetails = Patient(
+                1,
+                firstName = firstName.text.toString(),
+                lastName = "",
+                dateOfBirth = dateOfBirth.text.toString(),
+                gender = gender.text.toString(),
+                contactNumber = contactNumber.text.toString(),
+                email = email.text.toString(),
+                address = address.text.toString(),
+                medicalHistory = medicalHistory.text.toString(),
+                Doctor(sharedPreferencesHelper.getUserId())
+            )
+
+
+            viewModel.saveNewPatient(token, patientDetails)
+                .observe(viewLifecycleOwner) { response ->
+                    if (response != null) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Patient saved successfully!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to save patient",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            dialog.dismiss()
+        }
+
+        // Show the dialog
+        dialog.show()
     }
 }
