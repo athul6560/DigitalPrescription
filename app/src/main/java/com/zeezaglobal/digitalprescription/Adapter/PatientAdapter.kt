@@ -25,7 +25,7 @@ class PatientAdapter(private val patients: MutableList<Patient>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_ITEM) {
-            val view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.patient_layout, parent, false)
             PatientViewHolder(view)
         } else {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
@@ -36,16 +36,19 @@ class PatientAdapter(private val patients: MutableList<Patient>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is PatientViewHolder) {
             val patient = patients[position]
+            val initials = patient.firstName.take(2).uppercase()
+            holder.avatar.text = initials
+            holder.avatar.text = initials.uppercase()
             holder.firstName.text = patient.firstName
-            holder.lastName.text = patient.lastName
+
         }
     }
 
     override fun getItemCount(): Int = patients.size
 
     inner class PatientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val firstName: TextView = view.findViewById(android.R.id.text1)
-        val lastName: TextView = view.findViewById(android.R.id.text2)
+        val firstName: TextView = view.findViewById(R.id.name_edittext)
+        val avatar: TextView = view.findViewById(R.id.tvAvatar)
     }
 
     inner class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)

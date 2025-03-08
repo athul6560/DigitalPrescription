@@ -21,7 +21,7 @@ class HomeViewModel : ViewModel() {
 
     private var currentPage = 0
     private var totalPages = 1
-    private val pageSize = 2
+    private val pageSize = 50
 
     fun loadPatients(token: String,doctorId: Long) {
         if (currentPage >= totalPages) return // No more pages to load

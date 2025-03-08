@@ -72,11 +72,11 @@ class HomeFragment : Fragment() {
         val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
         token = sharedPreferences.getString("jwt_token", "") ?: ""
 
-        viewModel.patients.observe(this) { patients ->
+        viewModel.patients.observe(requireActivity()) { patients ->
             adapter.addPatients(patients)
         }
 
-        viewModel.isLoading.observe(this) { loading ->
+        viewModel.isLoading.observe(requireActivity()) { loading ->
             isLoading = loading
         }
         //
