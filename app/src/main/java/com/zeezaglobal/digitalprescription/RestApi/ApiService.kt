@@ -6,6 +6,7 @@ import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.DTO.DoctorResponse
 import com.zeezaglobal.digitalprescription.DTO.LoginData
 import com.zeezaglobal.digitalprescription.DTO.LoginResponse
+import com.zeezaglobal.digitalprescription.DTO.PaginatedResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.Entity.Patient
@@ -35,4 +36,13 @@ interface ApiService {
 
     @POST("api/patients")
     fun addPatient(@Header("Authorization") token: String, @Body doctorDetails: Patient): Call<Patient>
+
+    @GET("api/patients/doctor/{doctorId}")
+    fun getPatients(
+        @Header("Authorization") token: String,
+        @Path("doctorId") doctorId: Long,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String = "firstName,asc"
+    ): Call<PaginatedResponse<Patient>>
 }

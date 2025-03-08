@@ -14,6 +14,10 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.zeezaglobal.digitalprescription.Adapter.PatientAdapter
 import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.Entity.Doctor
 import com.zeezaglobal.digitalprescription.Entity.Patient
@@ -31,10 +35,14 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var token: String
     private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
+
+    private lateinit var adapter: PatientAdapter
+    private var isLoading = false
+    private  var  doctorId :Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Use the ViewModel
+
     }
 
     override fun onCreateView(
@@ -42,6 +50,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         sharedPreferencesHelper = SharedPreferencesHelper(requireContext())
+        doctorId= sharedPreferencesHelper.getUserId()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -56,8 +65,37 @@ class HomeFragment : Fragment() {
         dateTextView.setText(DateUtils.getCurrentDate())
         monthTextView.setText(DateUtils.getCurrentMonth())
         // Retrieve token and doctorId from SharedPreferences or arguments
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+        adapter = PatientAdapter(mutableListOf())
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
         val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
         token = sharedPreferences.getString("jwt_token", "") ?: ""
+
+        viewModel.patients.observe(this) { patients ->
+            adapter.addPatients(patients)
+        }
+
+        viewModel.isLoading.observe(this) { loading ->
+            isLoading = loading
+        }
+        //
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
+                    viewModel.loadPatients(token,doctorId)
+                }
+            }
+        })
+
+        viewModel.loadPatients(token,doctorId) // Initial load
+
+
         val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong()
             ?: 0L // Default to 0L if -1
 
