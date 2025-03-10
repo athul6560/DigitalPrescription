@@ -18,11 +18,13 @@ lifecycleLivedataKtx = "2.8.7"
 lifecycleViewmodelKtx = "2.8.7"
 fragmentKtx = "1.5.6"
 zxingVersion = '3.4.1'
+zxing = "4.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 zxingVersion = { group = "com.google.zxing", name = "core", version.ref = "zxingVersion" }
+zxing_android_embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing" }
 
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
