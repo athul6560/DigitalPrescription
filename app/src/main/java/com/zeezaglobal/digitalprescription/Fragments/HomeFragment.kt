@@ -36,6 +36,8 @@ import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.Entity.Doctor
 import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.Utils.Constants
+
 import com.zeezaglobal.digitalprescription.Utils.DateUtils
 import com.zeezaglobal.digitalprescription.Utils.SharedPreferencesHelper
 import java.util.Calendar
@@ -312,8 +314,11 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
     }
 
     override fun onPatientClick(patient: Patient) {
+        Constants.currentPatient = patient
         (activity as? DashboardActivity)?.let { dashboardActivity ->
-            dashboardActivity.findViewById<ViewPager2>(R.id.viewPager).currentItem = 1
+
+            val viewPager = dashboardActivity.findViewById<ViewPager2>(R.id.viewPager)
+            viewPager.currentItem = 1
         }
     }
 }

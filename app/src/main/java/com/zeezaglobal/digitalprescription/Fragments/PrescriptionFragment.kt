@@ -15,9 +15,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.zeezaglobal.digitalprescription.Activities.PdfActivity
+import com.zeezaglobal.digitalprescription.Entity.Patient
 
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.Utils.AgeUtils
+import com.zeezaglobal.digitalprescription.Utils.Constants
 
 class PrescriptionFragment : Fragment() {
     private lateinit var searchEditText: AutoCompleteTextView
@@ -25,17 +31,41 @@ class PrescriptionFragment : Fragment() {
     private lateinit var generateButton: Button
     private lateinit var drugName: TextView
     private lateinit var remarks: EditText
+    private lateinit var patientName: TextView
+    private lateinit var phoneNumber: TextView
+    private lateinit var ageText: TextView
 
-    private val drugList = listOf("Paracetamol", "Ibuprofen", "Aspirin", "Amoxicillin", "Cetirizine", "Lorazepam")
+    private var patient: Patient? = null
+    private val drugList =
+        listOf("Paracetamol", "Ibuprofen", "Aspirin", "Amoxicillin", "Cetirizine", "Lorazepam")
 
     companion object {
         fun newInstance() = PrescriptionFragment()
     }
 
-    private val viewModel: PrescriptionViewModel by viewModels()
+    private val viewModel: PrescriptionViewModel by activityViewModels()
+    override fun onResume() {
+        super.onResume()
+        // This code will run every time the fragment becomes visible
+        patient = Constants.currentPatient
+        // Toast.makeText(requireContext(), patient?.firstName + "", Toast.LENGTH_SHORT).show()
+
+        // You can reinitialize or refresh any data that needs to be updated here
+        if (patient != null) {
+            patientName.text = patient?.firstName
+            phoneNumber.text = patient?.contactNumber
+            ageText.text = AgeUtils.calculateAge(patient?.dateOfBirth)
+        } else {
+            patientName.text = "No Patient Selected"
+            phoneNumber.text = ""
+            ageText.text=""
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        patient = Constants.currentPatient
+        // Toast.makeText(requireContext(), patient?.firstName + "", Toast.LENGTH_SHORT).show()
 
         // TODO: Use the ViewModel if needed
     }
@@ -53,13 +83,22 @@ class PrescriptionFragment : Fragment() {
         generateButton = view.findViewById(R.id.button4)
         drugName = view.findViewById(R.id.drug_name)
         remarks = view.findViewById(R.id.remark_feild)
+        patientName = view.findViewById(R.id.patient_name)
+        phoneNumber = view.findViewById(R.id.phone_number_text)
+        ageText = view.findViewById(R.id.age_text)
 
+
+        if (patient != null)
+            patientName.text = patient?.firstName
+        else patientName.text = "No Patient Selected"
         // Set up the ArrayAdapter for the drug list
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, drugList)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, drugList)
         searchEditText.setAdapter(adapter)
         searchEditText.setOnItemClickListener { parent, view, position, id ->
             val selectedDrug = parent.getItemAtPosition(position) as String
-            drugName.text = selectedDrug+" - 500mg" // Set the selected drug name into the TextView
+            drugName.text =
+                selectedDrug + " - 500mg" // Set the selected drug name into the TextView
         }
         // Set up the button click listener
         generateButton.setOnClickListener {

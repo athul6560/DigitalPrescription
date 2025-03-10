@@ -21,6 +21,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.Utils.Constants
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -39,7 +40,7 @@ class PdfActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        var patient = Constants.currentPatient
         val drugName = intent.getStringExtra("drug_name")
         val duration = intent.getStringExtra("duration")
         val remark = intent.getStringExtra("remark")
