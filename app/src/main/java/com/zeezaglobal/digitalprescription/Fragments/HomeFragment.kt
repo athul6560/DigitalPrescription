@@ -28,6 +28,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.zeezaglobal.digitalprescription.Activities.DashboardActivity
 import com.zeezaglobal.digitalprescription.Activities.QRScannerActivity
 import com.zeezaglobal.digitalprescription.Adapter.PatientAdapter
 import com.zeezaglobal.digitalprescription.DTO.DoctorId
@@ -38,7 +40,7 @@ import com.zeezaglobal.digitalprescription.Utils.DateUtils
 import com.zeezaglobal.digitalprescription.Utils.SharedPreferencesHelper
 import java.util.Calendar
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -51,7 +53,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var adapter: PatientAdapter
     private var isLoading = false
-    private  var  doctorId :Long = 0
+    private var doctorId: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,7 +65,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         sharedPreferencesHelper = SharedPreferencesHelper(requireContext())
-        doctorId= sharedPreferencesHelper.getUserId()
+        doctorId = sharedPreferencesHelper.getUserId()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -81,7 +83,7 @@ class HomeFragment : Fragment() {
         monthTextView.setText(DateUtils.getCurrentMonth())
         // Retrieve token and doctorId from SharedPreferences or arguments
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
-        adapter = PatientAdapter(mutableListOf())
+        adapter = PatientAdapter(mutableListOf(), this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
         val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
@@ -90,20 +92,34 @@ class HomeFragment : Fragment() {
         searchIcon.setOnClickListener {
             if (searchView.text.isNullOrEmpty()) {
                 // For Fragment:
+
                 val intent = Intent(requireContext(), QRScannerActivity::class.java)
-                startActivityForResult(intent, 0) // You can replace 0 with any requestCode you prefer
+                startActivityForResult(
+                    intent,
+                    0
+                ) // You can replace 0 with any requestCode you prefer
 
             } else {
 
-         getSearchDataToRecyclercview(searchView.text.toString())
+                getSearchDataToRecyclercview(searchView.text.toString())
             }
         }
         searchView.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
                 // You can implement actions before text is changed
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 // Check if the EditText is not empty and change the icon accordingly
                 if (charSequence.isNullOrEmpty()) {
                     // Set the default icon (e.g., a search icon)
@@ -134,12 +150,12 @@ class HomeFragment : Fragment() {
                 val totalItemCount = layoutManager.itemCount
 
                 if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
-                    viewModel.loadPatients(token,doctorId)
+                    viewModel.loadPatients(token, doctorId)
                 }
             }
         })
 
-        viewModel.loadPatients(token,doctorId) // Initial load
+        viewModel.loadPatients(token, doctorId) // Initial load
 
 
         val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong()
@@ -170,7 +186,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getSearchDataToRecyclercview(text: String) {
-       viewModel.searchPatient(token,text)
+        viewModel.searchPatient(token, text)
         viewModel.patientsSearch.observe(viewLifecycleOwner, Observer { patients ->
 
             adapter.updatePatients(patients)
@@ -189,13 +205,17 @@ class HomeFragment : Fragment() {
             ).show()
         }
     }
+
     private fun showCustomPopup() {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE) // Remove default title bar
         dialog.setContentView(R.layout.patient_custom_popup)
 
 // Make the dialog full-screen
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
 
         // Find views in the custom layout
@@ -213,19 +233,20 @@ class HomeFragment : Fragment() {
         val email: EditText = dialog.findViewById(R.id.email)
         val address: EditText = dialog.findViewById(R.id.address)
         val medicalHistory: EditText = dialog.findViewById(R.id.medical_history)
-        var gender=""
+        var gender = ""
         dateOfBirth.setOnClickListener {
             showDatePicker(dateOfBirth)
         }
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.radioMale -> {
-                    gender="Male"
+                    gender = "Male"
                     // Male selected
                     // Handle the male selection logic here
                 }
+
                 R.id.radioFemale -> {
-                    gender="Female"
+                    gender = "Female"
                     // Female selected
                     // Handle the female selection logic here
                 }
@@ -265,7 +286,7 @@ class HomeFragment : Fragment() {
                 }
             dialog.dismiss()
         }
-        closeButton.setOnClickListener{
+        closeButton.setOnClickListener {
             dialog.dismiss()
         }
         // Show the dialog
@@ -288,5 +309,11 @@ class HomeFragment : Fragment() {
         )
 
         datePickerDialog.show()
+    }
+
+    override fun onPatientClick(patient: Patient) {
+        (activity as? DashboardActivity)?.let { dashboardActivity ->
+            dashboardActivity.findViewById<ViewPager2>(R.id.viewPager).currentItem = 1
+        }
     }
 }

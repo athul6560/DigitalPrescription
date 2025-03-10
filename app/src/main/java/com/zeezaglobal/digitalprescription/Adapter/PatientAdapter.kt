@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.R
 
-class PatientAdapter(private val patients: MutableList<Patient>) :
+class PatientAdapter(private val patients: MutableList<Patient>, private val listener: OnPatientClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+    interface OnPatientClickListener {
+        fun onPatientClick(patient: Patient)
+    }
     private val VIEW_TYPE_ITEM = 0
     private val VIEW_TYPE_LOADING = 1
 
@@ -42,6 +44,9 @@ class PatientAdapter(private val patients: MutableList<Patient>) :
             holder.avatar.text = initials
             holder.avatar.text = initials.uppercase()
             holder.firstName.text = patient.firstName
+            holder.itemView.setOnClickListener {
+                listener.onPatientClick(patient)
+            }
 
         }
     }
