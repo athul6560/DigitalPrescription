@@ -1,5 +1,6 @@
 package com.zeezaglobal.digitalprescription.Adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class PatientAdapter(private val patients: MutableList<Patient>) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
         if (holder is PatientViewHolder) {
             val patient = patients[position]
             val initials = patient.firstName.take(2).uppercase()
@@ -42,6 +44,13 @@ class PatientAdapter(private val patients: MutableList<Patient>) :
             holder.firstName.text = patient.firstName
 
         }
+    }
+    fun updatePatients(newPatients: List<Patient>) {
+
+        patients.clear()
+
+        patients.addAll(newPatients)
+        notifyDataSetChanged() // Ensures UI refresh
     }
 
     override fun getItemCount(): Int = patients.size

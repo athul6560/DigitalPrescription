@@ -1,5 +1,6 @@
 package com.zeezaglobal.digitalprescription.Repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.zeezaglobal.digitalprescription.DTO.PaginatedResponse
@@ -32,6 +33,37 @@ class PatientRepository {
 
         return data
     }
+     fun searchPatient(token: String, firstName: String): LiveData<List<Patient>> {
+        val listOfPatients = MutableLiveData<List<Patient>>()
+
+        apiService.searchPatients("Bearer $token",firstName)
+            .enqueue(object : Callback<List<Patient>> {
+                override fun onResponse(call: Call<List<Patient>>, response: Response<List<Patient>>) {
+                    if (response.isSuccessful) {
+                        response.body()?.let { patients ->
+                            listOfPatients.postValue(patients) // Update LiveData with the patient list
+                            for (patient in patients) {
+                                Log.d("PatientData", "Name: ${patient.firstName} ${patient.lastName}, Contact: ${patient.contactNumber}")
+                            }
+                        } ?: run {
+                            listOfPatients.postValue(emptyList()) // Post empty list if no patients found
+                            Log.d("PatientData", "No patients found")
+                        }
+                    } else {
+                        listOfPatients.postValue(emptyList()) // Post empty list in case of error
+                        Log.e("PatientData", "Request failed: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Patient>>, t: Throwable) {
+                    listOfPatients.postValue(emptyList()) // Post empty list in case of network failure
+                    Log.e("PatientData", "Error: ${t.message}")
+                }
+            })
+
+        return listOfPatients
+    }
+
     fun savePatient(token: String, patient: Patient): LiveData<Patient?> {
         val liveData = MutableLiveData<Patient?>()
 

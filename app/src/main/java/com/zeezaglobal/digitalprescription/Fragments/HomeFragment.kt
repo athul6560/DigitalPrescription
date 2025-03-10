@@ -95,7 +95,7 @@ class HomeFragment : Fragment() {
 
             } else {
 
-         Toast.makeText(requireContext(),"Search",Toast.LENGTH_SHORT).show()
+         getSearchDataToRecyclercview(searchView.text.toString())
             }
         }
         searchView.addTextChangedListener(object : TextWatcher {
@@ -168,6 +168,16 @@ class HomeFragment : Fragment() {
             Toast.makeText(requireContext(), "Token is missing!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun getSearchDataToRecyclercview(text: String) {
+       viewModel.searchPatient(token,text)
+        viewModel.patientsSearch.observe(viewLifecycleOwner, Observer { patients ->
+
+            adapter.updatePatients(patients)
+        })
+
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0 && resultCode == RESULT_OK) {

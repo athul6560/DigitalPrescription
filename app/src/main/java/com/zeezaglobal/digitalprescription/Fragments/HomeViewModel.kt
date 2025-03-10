@@ -23,6 +23,15 @@ class HomeViewModel : ViewModel() {
     private var totalPages = 1
     private val pageSize = 50
 
+    private val _patientsSearch = MutableLiveData<List<Patient>>()
+    val patientsSearch: LiveData<List<Patient>> get() = _patientsSearch
+
+
+    fun searchPatient(token: String,firstName: String) {
+        patientRepository.searchPatient(token,firstName).observeForever { patientList ->
+            _patientsSearch.value = patientList
+        }
+    }
     fun loadPatients(token: String,doctorId: Long) {
         if (currentPage >= totalPages) return // No more pages to load
 

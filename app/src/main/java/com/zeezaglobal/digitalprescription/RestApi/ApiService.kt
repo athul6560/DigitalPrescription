@@ -37,6 +37,11 @@ interface ApiService {
     @POST("api/patients")
     fun addPatient(@Header("Authorization") token: String, @Body doctorDetails: Patient): Call<Patient>
 
+    @GET("api/patients/search")
+    fun searchPatients(@Header("Authorization") token: String,
+        @Query("firstName") firstName: String
+    ): Call<List<Patient>>
+
     @GET("api/patients/doctor/{doctorId}")
     fun getPatients(
         @Header("Authorization") token: String,
