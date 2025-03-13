@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
+import com.stripe.android.PaymentConfiguration
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.ViewModel.DoctorViewModel
@@ -28,7 +29,6 @@ class DoctorDeatilsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
 
 
 

@@ -37,7 +37,7 @@ android {
 
 dependencies {
     implementation(libs.zxing.android.embedded)
-
+    implementation(libs.stripe.android)
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

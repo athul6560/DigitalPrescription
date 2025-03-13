@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
+import com.stripe.android.PaymentConfiguration
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.ViewModel.UserViewModel
 
@@ -30,6 +31,16 @@ class LoginActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.password_edittext)
         val loginButton = findViewById<Button>(R.id.login_btn)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val PayBtn = findViewById<Button>(R.id.button5)
+        PaymentConfiguration.init(
+            applicationContext,
+            "pk_test_51QB0leCsOvBUMpCYLGzCsPDnPdyRI7XwsJ2fLuEBDRAQQl7LqvK3kTCT0AJwP40dKPK28Ghs7HkLtfEhBwiiNpAx00ElUqv6HL"
+        )
+        PayBtn.setOnClickListener {
+            val intent = Intent(this, SubscriptionActivity::class.java)
+            startActivity(intent)
+        }
+
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()

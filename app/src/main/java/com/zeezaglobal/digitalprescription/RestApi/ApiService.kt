@@ -7,6 +7,7 @@ import com.zeezaglobal.digitalprescription.DTO.DoctorResponse
 import com.zeezaglobal.digitalprescription.DTO.LoginData
 import com.zeezaglobal.digitalprescription.DTO.LoginResponse
 import com.zeezaglobal.digitalprescription.DTO.PaginatedResponse
+import com.zeezaglobal.digitalprescription.DTO.PaymentIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.Entity.Patient
@@ -50,4 +51,8 @@ interface ApiService {
         @Query("size") size: Int,
         @Query("sort") sort: String = "firstName,asc"
     ): Call<PaginatedResponse<Patient>>
+
+    @POST("/api/stripe/payment-intent")
+    fun createPaymentIntent(@Body request: PaymentIntentRequest): Call<Map<String, String>>
+
 }

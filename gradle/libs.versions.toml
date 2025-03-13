@@ -12,6 +12,7 @@ constraintlayout = "2.2.0"
 retrofit = "2.9.0"
 okhttpLogging = "4.12.0"
 gson = "2.10.1"
+stripeAndroid = "21.2.1"
 viewpager2 = "1.1.0"
 legacySupportV4 = "1.0.0"
 lifecycleLivedataKtx = "2.8.7"
@@ -23,6 +24,7 @@ zxing = "4.3.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripeAndroid" }
 zxingVersion = { group = "com.google.zxing", name = "core", version.ref = "zxingVersion" }
 zxing_android_embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing" }
 
