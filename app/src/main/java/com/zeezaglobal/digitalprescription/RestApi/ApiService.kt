@@ -52,7 +52,7 @@ interface ApiService {
         @Query("sort") sort: String = "firstName,asc"
     ): Call<PaginatedResponse<Patient>>
 
-    @POST("/api/stripe/payment-intent")
-    fun createPaymentIntent(@Body request: PaymentIntentRequest): Call<Map<String, String>>
+    @POST("/api/stripe/customer")
+    fun createCustomer(@Body request: Map<String, String>): Call<String>
 
 }

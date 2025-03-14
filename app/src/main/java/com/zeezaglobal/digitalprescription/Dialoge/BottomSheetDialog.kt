@@ -18,11 +18,11 @@ class BottomSheetDialog : BottomSheetDialogFragment() {
         val view = inflater.inflate(R.layout.bottom_sheet_layout, container, false)
 
         // Find buttons from the layout
-        val algoButton: Button = view.findViewById(R.id.button_1)
+        val payBtn: Button = view.findViewById(R.id.button_1)
 
 
         // Set click listener for Algorithm button
-        algoButton.setOnClickListener {
+        payBtn.setOnClickListener {
             Toast.makeText(activity, "First Button Clicked", Toast.LENGTH_SHORT).show()
             dismiss() // Close the bottom sheet
         }
