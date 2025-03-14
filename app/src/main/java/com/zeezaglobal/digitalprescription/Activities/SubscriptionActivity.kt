@@ -25,6 +25,7 @@ class SubscriptionActivity : AppCompatActivity() {
     private lateinit var monthlyLayout: ConstraintLayout
     private lateinit var paymentBtn: Button
     private lateinit var stripe: Stripe
+    private lateinit var paymentSheet: PaymentSheet
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,11 +43,12 @@ class SubscriptionActivity : AppCompatActivity() {
             selectPlan(yearlyLayout, monthlyLayout)
         }
         paymentBtn.setOnClickListener {
-            Toast.makeText(this, "Payment button clicked", Toast.LENGTH_SHORT).show()
-            val bottomSheet = BottomSheetDialog()
+
+           // val bottomSheet = BottomSheetDialog()
 
             // Show the bottom sheet
-            bottomSheet.show(supportFragmentManager, "ModalBottomSheet")
+           // bottomSheet.show(supportFragmentManager, "ModalBottomSheet")
+            fetchPaymentIntentAndShowSheet()
         }
         monthlyLayout.setOnClickListener {
             selectPlan(monthlyLayout, yearlyLayout)
@@ -56,50 +58,47 @@ class SubscriptionActivity : AppCompatActivity() {
             applicationContext,
             "pk_test_51QB0leCsOvBUMpCYLGzCsPDnPdyRI7XwsJ2fLuEBDRAQQl7LqvK3kTCT0AJwP40dKPK28Ghs7HkLtfEhBwiiNpAx00ElUqv6HL"
         )
+        paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
         stripe = Stripe(this, PaymentConfiguration.getInstance(this).publishableKey)
-        val cardInputWidget = findViewById<CardInputWidget>(R.id.cardInputWidget)
-        val attachButton = findViewById<Button>(R.id.pay_button_sub)
-        // Initialize PaymentSheet
 
 
-        attachButton.setOnClickListener {
-            val cardParams = cardInputWidget.paymentMethodCreateParams
-            if (cardParams != null) {
-                createPaymentMethod(cardParams)
-            } else {
-                Toast.makeText(this, "Invalid card details", Toast.LENGTH_SHORT).show()
-            }
-        }
+
+
     }
 
-    private fun createPaymentMethod(params: PaymentMethodCreateParams) {
-        stripe.createPaymentMethod(params, callback = object : ApiResultCallback<PaymentMethod> {
-            override fun onSuccess(result: PaymentMethod) {
-                val paymentMethodId = result.id
-                if (paymentMethodId != null) {
-                    attachPaymentMethodToCustomer(
-                        paymentMethodId,
-                        "cus_xxx123"
-                    ) // Replace with actual customer ID
-                }
-            }
+    private fun fetchPaymentIntentAndShowSheet() {
+        val clientSecret = "pi_3R2P5NCsOvBUMpCY1rCFGzPW_secret_kuk3PM6YDQicX23wcyAyos8fL" // Replace with actual test client_secret
+        val ephemeralKey = "ek_test_YWNjdF8xUUIwbGVDc092QlVNcENZLEpscHQ2ZmFheGxiOURQNnhjVkRWVGdTQ0JLS0JWSmw_00XgWnMwJh" // Replace with actual test ephemeral key
+        val customerId = "cus_RwF3W5Akfcz1dP" // Replace with actual test customer ID
 
-            override fun onError(e: Exception) {
-                Toast.makeText(this@SubscriptionActivity, "Error: ${e.message}", Toast.LENGTH_LONG)
-                    .show()
-            }
-        })
+        val paymentSheetConfig = PaymentSheet.Configuration(
+            merchantDisplayName = "Your Business Name",
+            customer = PaymentSheet.CustomerConfiguration(customerId, ephemeralKey)
+        )
+
+        paymentSheet.presentWithPaymentIntent(clientSecret, paymentSheetConfig)
     }
+
+
 
     private fun selectPlan(selected: ConstraintLayout, other: ConstraintLayout) {
         selected.setBackgroundResource(R.drawable.selected_border)
         other.setBackgroundResource(R.drawable.edittext_border)
     }
 
-    private fun attachPaymentMethodToCustomer(paymentMethodId: String, customerId: String) {
-        Log.d("TAG", "attachPaymentMethodToCustomer: " + paymentMethodId + "-" + customerId)
-        Toast.makeText(this, "" + paymentMethodId + "-" + customerId, Toast.LENGTH_SHORT).show()
 
+    private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+        when (paymentSheetResult) {
+            is PaymentSheetResult.Completed -> {
+                Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show()
+            }
+            is PaymentSheetResult.Canceled -> {
+                Toast.makeText(this, "Payment canceled", Toast.LENGTH_SHORT).show()
+            }
+            is PaymentSheetResult.Failed -> {
+                Toast.makeText(this, "Payment failed: ${paymentSheetResult.error.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
 

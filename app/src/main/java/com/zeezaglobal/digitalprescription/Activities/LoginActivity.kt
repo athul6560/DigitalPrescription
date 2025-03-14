@@ -31,15 +31,11 @@ class LoginActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.password_edittext)
         val loginButton = findViewById<Button>(R.id.login_btn)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val PayBtn = findViewById<Button>(R.id.button5)
         PaymentConfiguration.init(
             applicationContext,
             "pk_test_51QB0leCsOvBUMpCYLGzCsPDnPdyRI7XwsJ2fLuEBDRAQQl7LqvK3kTCT0AJwP40dKPK28Ghs7HkLtfEhBwiiNpAx00ElUqv6HL"
         )
-        PayBtn.setOnClickListener {
-            val intent = Intent(this, SubscriptionActivity::class.java)
-            startActivity(intent)
-        }
+
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
@@ -62,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                                 .edit()
                                 .putInt("user_id", token.user.id) // `token` is already a String
                                 .apply()
-                            val intent = Intent(this, DoctorDeatilsActivity::class.java)
+                            val intent = Intent(this, SubscriptionActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
