@@ -1,21 +1,22 @@
 package com.zeezaglobal.digitalprescription.RestApi
 
-import com.zeezaglobal.digitalprescription.Activities.DoctorDeatilsActivity
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
-import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.DTO.DoctorResponse
 import com.zeezaglobal.digitalprescription.DTO.LoginData
 import com.zeezaglobal.digitalprescription.DTO.LoginResponse
 import com.zeezaglobal.digitalprescription.DTO.PaginatedResponse
 import com.zeezaglobal.digitalprescription.DTO.PaymentIntentRequest
+import com.zeezaglobal.digitalprescription.DTO.PaymentMethodPayload
+import com.zeezaglobal.digitalprescription.DTO.PaymentResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.Entity.Patient
-import com.zeezaglobal.digitalprescription.Entity.User
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Headers
 
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -52,7 +53,12 @@ interface ApiService {
         @Query("sort") sort: String = "firstName,asc"
     ): Call<PaginatedResponse<Patient>>
 
-    @POST("/api/stripe/customer")
-    fun createCustomer(@Body request: Map<String, String>): Call<String>
+    @POST("api/stripe/payment-intent")
+    @Headers("Content-Type: application/json")
+    fun createSubscription(@Header("Authorization") token: String, @Body paymentRequest: PaymentIntentRequest): Call<PaymentResponse>
+
+    @POST("api/stripe/attach-payment-method")
+    @Headers("Content-Type: application/json")
+     fun attachPaymentMethod(@Header("Authorization") token: String,@Body payload: PaymentMethodPayload): Call<Unit>
 
 }

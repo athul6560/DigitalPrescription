@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                                 .edit()
                                 .putInt("user_id", token.user.id) // `token` is already a String
                                 .apply()
-                            val intent = Intent(this, SubscriptionActivity::class.java)
+                            val intent = Intent(this, DoctorDeatilsActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
