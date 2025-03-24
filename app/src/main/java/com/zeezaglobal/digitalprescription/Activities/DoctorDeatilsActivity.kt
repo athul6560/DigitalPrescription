@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import com.stripe.android.PaymentConfiguration
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
+import com.zeezaglobal.digitalprescription.Dialoge.LoadingDialogue
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.ViewModel.DoctorViewModel
 import com.zeezaglobal.digitalprescription.ViewModel.UserViewModel
@@ -52,6 +53,10 @@ class DoctorDeatilsActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, specializations)
         specializationAutoComplete.setAdapter(adapter)
         submitButton.setOnClickListener {
+            val loadingDialog = LoadingDialogue(this)
+            loadingDialog.show("Fetching data...")
+// To dismiss
+
             // Collect Data
             val firstName = firstNameEditText.text.toString().trim()
             val lastName = ""
@@ -64,6 +69,7 @@ class DoctorDeatilsActivity : AppCompatActivity() {
             if (firstName.isEmpty()  || specialization.isEmpty() ||
                 registrationNumber.isEmpty() || phoneNumber.isEmpty() || countryCode.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                loadingDialog.dismiss()
                 return@setOnClickListener
             }
 
@@ -71,6 +77,7 @@ class DoctorDeatilsActivity : AppCompatActivity() {
 
             if (!phoneNumber.matches("\\d{10}".toRegex())) {
                 Toast.makeText(this, "Enter a valid 10-digit phone number", Toast.LENGTH_SHORT).show()
+                loadingDialog.dismiss()
                 return@setOnClickListener
             }
 
@@ -96,13 +103,11 @@ class DoctorDeatilsActivity : AppCompatActivity() {
             if (token != null) {
                 viewmodel.updateDoctor(token, doctorDetailsDTO).observe(this,
                     Observer { doctorResponse ->
-                        if (doctorResponse != null) {
 
+                        loadingDialog.dismiss()
                          startActivity(Intent(this, DashboardActivity::class.java))
 
-                        } else {
 
-                        }
                     })
             }
 
