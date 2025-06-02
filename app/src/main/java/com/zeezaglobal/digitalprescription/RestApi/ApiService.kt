@@ -10,6 +10,8 @@ import com.zeezaglobal.digitalprescription.DTO.PaymentMethodPayload
 import com.zeezaglobal.digitalprescription.DTO.PaymentResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
+import com.zeezaglobal.digitalprescription.DTO.SetupIntentRequest
+import com.zeezaglobal.digitalprescription.DTO.SetupIntentResponse
 import com.zeezaglobal.digitalprescription.Entity.Patient
 import retrofit2.Call
 import retrofit2.Response
@@ -53,9 +55,11 @@ interface ApiService {
         @Query("sort") sort: String = "firstName,asc"
     ): Call<PaginatedResponse<Patient>>
 
-    @POST("api/stripe/payment-intent")
+
+
+    @POST("api/stripe/setup-intent")
     @Headers("Content-Type: application/json")
-    fun createSubscription(@Header("Authorization") token: String, @Body paymentRequest: PaymentIntentRequest): Call<PaymentResponse>
+    fun createSetupIntent(@Header("Authorization") token: String,@Body request: SetupIntentRequest): Call<SetupIntentResponse>
 
     @POST("api/stripe/attach-payment-method")
     @Headers("Content-Type: application/json")

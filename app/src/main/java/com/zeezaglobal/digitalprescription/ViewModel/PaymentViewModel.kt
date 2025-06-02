@@ -6,27 +6,40 @@ import androidx.lifecycle.ViewModel
 import com.zeezaglobal.digitalprescription.DTO.PaymentMethodPayload
 import com.zeezaglobal.digitalprescription.DTO.PaymentResponse
 import com.zeezaglobal.digitalprescription.Repository.StripeRepository
+import com.zeezaglobal.digitalprescription.RestApi.ApiService
 
-class PaymentViewModel: ViewModel() {
-    private val repository = StripeRepository()
-    private val paymentResponseLiveData = MutableLiveData<PaymentResponse>()
-    private val errorLiveData = MutableLiveData<String>()
+class PaymentViewModel(private val apiService: ApiService) : ViewModel() {
 
-    fun getPaymentResponse(): LiveData<PaymentResponse> = paymentResponseLiveData
-    fun getError(): LiveData<String> = errorLiveData
-    private val _paymentMethodStatus = MutableLiveData<Result<Unit>>()
-    val paymentMethodStatus: LiveData<Result<Unit>> get() = _paymentMethodStatus
-    fun attachPaymentMethod(token: String, paymentMethodId: String, customerId: String): LiveData<Boolean> {
-        return repository.attachPaymentMethod(token, paymentMethodId, customerId)
-    }
-    fun createSubscriptionIntent(token: String, customerId: String, isMonthly: Boolean) {
-        repository.createPaymentIntent(token,customerId, isMonthly, object : StripeRepository.PaymentIntentCallback {
-            override fun onSuccess(paymentResponse: PaymentResponse) {
-                paymentResponseLiveData.value = paymentResponse
+    private val _clientSecret = MutableLiveData<String>()
+    val clientSecret: LiveData<String> get() = _clientSecret
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
+    fun createStripeSetupIntent(token: String, customerId: String) {
+        val request = SetupIntentRequest(customerId)
+        val call = apiService.createSetupIntent("Bearer $token", request)
+
+        call.enqueue(object : Callback<SetupIntentResponse> {
+            override fun onResponse(
+                call: Call<SetupIntentResponse>,
+                response: Response<SetupIntentResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val secret = response.body()?.clientSecret
+                    Log.d("Stripe", "Client Secret: $secret")
+                    _clientSecret.postValue(secret)
+                } else {
+                    val errorMessage = "Request failed: ${response.code()}"
+                    Log.e("Stripe", errorMessage)
+                    _error.postValue(errorMessage)
+                }
             }
 
-            override fun onFailure(errorMessage: String) {
-                errorLiveData.value = errorMessage
+            override fun onFailure(call: Call<SetupIntentResponse>, t: Throwable) {
+                val errorMessage = "Network error: ${t.message}"
+                Log.e("Stripe", errorMessage)
+                _error.postValue(errorMessage)
             }
         })
     }

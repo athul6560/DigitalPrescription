@@ -53,7 +53,7 @@ class SubscriptionActivity : AppCompatActivity() {
             isMonthly = true
         }
         paymentBtn.setOnClickListener {
-            presentPaymentSheet("pi_3R2os7CsOvBUMpCY1iA3cV5X_secret_PwSbxbC19oV6Hfw6IWnluI3LC")
+            presentPaymentSheet("pi_3RTyLZCsOvBUMpCY18gr71Wz_secret_iicIMH6lFc69dAurerowymaza")
 
         }
         paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)

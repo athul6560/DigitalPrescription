@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.zeezaglobal.digitalprescription.Activities.DashboardActivity
 import com.zeezaglobal.digitalprescription.Activities.QRScannerActivity
+import com.zeezaglobal.digitalprescription.Activities.SubscriptionActivity
 import com.zeezaglobal.digitalprescription.Adapter.PatientAdapter
 import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.Entity.Doctor
@@ -165,7 +166,8 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
 
         val doctorId = DoctorId(id)// Replace with actual doctor ID, possibly passed as an argument
         addPatientTextView.setOnClickListener {
-            showCustomPopup()
+            startActivity(Intent(requireContext(), SubscriptionActivity::class.java))
+           // showCustomPopup()
         }
         if (token.isNotEmpty()) {
             viewModel.getDoctor(token, doctorId)

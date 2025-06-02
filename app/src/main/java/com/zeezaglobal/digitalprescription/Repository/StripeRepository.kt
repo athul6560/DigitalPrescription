@@ -1,10 +1,13 @@
 package com.zeezaglobal.digitalprescription.Repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.zeezaglobal.digitalprescription.DTO.PaymentIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.PaymentMethodPayload
 import com.zeezaglobal.digitalprescription.DTO.PaymentResponse
+import com.zeezaglobal.digitalprescription.DTO.SetupIntentRequest
+import com.zeezaglobal.digitalprescription.DTO.SetupIntentResponse
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,27 +34,28 @@ class StripeRepository {
 
         return liveData
     }
-    fun createPaymentIntent(token: String,customerId: String, isMonthly: Boolean, callback: PaymentIntentCallback) {
-        val paymentRequest = PaymentIntentRequest(customerId, isMonthly)
-        val call = apiService.createSubscription("Bearer $token",paymentRequest)
 
-        call.enqueue(object : retrofit2.Callback<PaymentResponse> {
-            override fun onResponse(call: Call<PaymentResponse>, response: retrofit2.Response<PaymentResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    callback.onSuccess(response.body()!!)
+    fun createStripeSetupIntent(token: String,customerId: String) {
+        val request = SetupIntentRequest(customerId)
+        val call = apiService.createSetupIntent("Bearer $token",request)
+
+        call.enqueue(object : Callback<SetupIntentResponse> {
+            override fun onResponse(
+                call: Call<SetupIntentResponse>,
+                response: Response<SetupIntentResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val clientSecret = response.body()?.clientSecret
+                    Log.d("Stripe", "Client Secret: $clientSecret")
                 } else {
-                    callback.onFailure(response.message())
+                    Log.e("Stripe", "Request failed: ${response.code()}")
                 }
             }
 
-            override fun onFailure(call: Call<PaymentResponse>, t: Throwable) {
-                callback.onFailure(t.message ?: "Unknown error")
+            override fun onFailure(call: Call<SetupIntentResponse>, t: Throwable) {
+                Log.e("Stripe", "Network error: ${t.message}")
             }
         })
     }
 
-    interface PaymentIntentCallback {
-        fun onSuccess(paymentResponse: PaymentResponse)
-        fun onFailure(errorMessage: String)
-    }
 }
