@@ -27,17 +27,17 @@ class HomeViewModel : ViewModel() {
     val patientsSearch: LiveData<List<Patient>> get() = _patientsSearch
 
 
-    fun searchPatient(token: String,firstName: String) {
-        patientRepository.searchPatient(token,firstName).observeForever { patientList ->
+    fun searchPatient(firstName: String) {
+        patientRepository.searchPatient(firstName).observeForever { patientList ->
             _patientsSearch.value = patientList
         }
     }
-    fun loadPatients(token: String,doctorId: Long) {
+    fun loadPatients(doctorId: Long) {
         if (currentPage >= totalPages) return // No more pages to load
 
         _isLoading.postValue(true)
 
-        patientRepository.getPatients(token,doctorId, currentPage, pageSize).observeForever { response ->
+        patientRepository.getPatients(doctorId, currentPage, pageSize).observeForever { response ->
             _isLoading.postValue(false)
 
             response?.let {
@@ -48,10 +48,10 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-    fun getDoctor(token: String, doctorId: DoctorId): LiveData<DoctorResponse?> {
-        return repository.getDoctor(token, doctorId)
+    fun getDoctor( doctorId: DoctorId): LiveData<DoctorResponse?> {
+        return repository.getDoctor( doctorId)
     }
-    fun saveNewPatient(token: String, patient: Patient): LiveData<Patient?> {
-        return patientRepository.savePatient(token, patient)
+    fun saveNewPatient( patient: Patient): LiveData<Patient?> {
+        return patientRepository.savePatient( patient)
     }
 }

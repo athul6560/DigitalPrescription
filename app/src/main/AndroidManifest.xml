@@ -10,6 +10,7 @@
 
     <application
         android:allowBackup="false"
+        android:name=".Application.MyApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -35,7 +36,7 @@
             android:name=".Activities.DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.DoctorDeatilsActivity"
+            android:name=".Activities.DoctorDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.RegisterActivity"

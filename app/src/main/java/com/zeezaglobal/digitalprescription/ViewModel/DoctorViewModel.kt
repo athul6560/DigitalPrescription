@@ -12,10 +12,10 @@ import com.zeezaglobal.digitalprescription.Repository.UserRepository
 class DoctorViewModel() : ViewModel() {
     private val repository = DoctorRepository()
 
-    fun updateDoctor(token:String, doctorDetails: DoctorDetailsDTO): LiveData<DoctorResponse?> {
-        return repository.updateDoctor(token, doctorDetails)
+    fun updateDoctor( doctorDetails: DoctorDetailsDTO): LiveData<DoctorResponse?> {
+        return repository.updateDoctor( doctorDetails)
     }
-    fun getDoctor(token: String, doctorId: DoctorId): LiveData<DoctorResponse?> {
-        return repository.getDoctor(token, doctorId)
+    fun getDoctor( doctorId: DoctorId): LiveData<DoctorResponse?> {
+        return repository.getDoctor( doctorId)
     }
 }

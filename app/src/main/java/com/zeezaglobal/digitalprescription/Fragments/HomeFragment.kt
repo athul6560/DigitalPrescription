@@ -51,7 +51,7 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
 
 
     private val viewModel: HomeViewModel by viewModels()
-    private lateinit var token: String
+
     private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
 
     private lateinit var adapter: PatientAdapter
@@ -90,7 +90,7 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
         val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
-        token = sharedPreferences.getString("jwt_token", "") ?: ""
+
 
         searchIcon.setOnClickListener {
             if (searchView.text.isNullOrEmpty()) {
@@ -153,12 +153,12 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
                 val totalItemCount = layoutManager.itemCount
 
                 if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
-                    viewModel.loadPatients(token, doctorId)
+                    viewModel.loadPatients( doctorId)
                 }
             }
         })
 
-        viewModel.loadPatients(token, doctorId) // Initial load
+        viewModel.loadPatients( doctorId) // Initial load
 
 
         val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong()
@@ -167,30 +167,28 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
         val doctorId = DoctorId(id)// Replace with actual doctor ID, possibly passed as an argument
         addPatientTextView.setOnClickListener {
             startActivity(Intent(requireContext(), SubscriptionActivity::class.java))
-           // showCustomPopup()
+            // showCustomPopup()
         }
-        if (token.isNotEmpty()) {
-            viewModel.getDoctor(token, doctorId)
-                .observe(viewLifecycleOwner, Observer { doctorResponse ->
-                    if (doctorResponse != null) {
-                        doctorNameTextView.text =
-                            "Dr. ${doctorResponse.firstName} ${doctorResponse.lastName}"
-                        specialisationTextView.text = doctorResponse.specialization
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to fetch doctor details",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
-        } else {
-            Toast.makeText(requireContext(), "Token is missing!", Toast.LENGTH_SHORT).show()
-        }
+
+        viewModel.getDoctor( doctorId)
+            .observe(viewLifecycleOwner, Observer { doctorResponse ->
+                if (doctorResponse != null) {
+                    doctorNameTextView.text =
+                        "Dr. ${doctorResponse.firstName} ${doctorResponse.lastName}"
+                    specialisationTextView.text = doctorResponse.specialization
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to fetch doctor details",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+
     }
 
     private fun getSearchDataToRecyclercview(text: String) {
-        viewModel.searchPatient(token, text)
+        viewModel.searchPatient( text)
         viewModel.patientsSearch.observe(viewLifecycleOwner, Observer { patients ->
 
             adapter.updatePatients(patients)
@@ -272,7 +270,7 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
             )
 
 
-            viewModel.saveNewPatient(token, patientDetails)
+            viewModel.saveNewPatient( patientDetails)
                 .observe(viewLifecycleOwner) { response ->
                     if (response != null) {
                         Toast.makeText(

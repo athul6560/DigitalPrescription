@@ -7,6 +7,7 @@ import com.zeezaglobal.digitalprescription.DTO.LoginResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
+import com.zeezaglobal.digitalprescription.RestApi.TokenManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +43,9 @@ class UserRepository {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     tokenData.postValue(responseBody)
+                    if (responseBody != null) {
+                        TokenManager.setToken(responseBody.token)
+                    }
                 // Store the token from the response
                 } else {
                     tokenData.postValue(null) // API returned an error response

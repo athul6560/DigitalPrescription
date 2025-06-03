@@ -13,14 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
-import com.stripe.android.PaymentConfiguration
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
 import com.zeezaglobal.digitalprescription.Dialoge.LoadingDialogue
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.ViewModel.DoctorViewModel
-import com.zeezaglobal.digitalprescription.ViewModel.UserViewModel
 
-class DoctorDeatilsActivity : AppCompatActivity() {
+class DoctorDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,13 +30,12 @@ class DoctorDeatilsActivity : AppCompatActivity() {
         }
 
 
-
         val specializations = arrayOf(
             "Cardiology", "Dermatology", "Endocrinology", "Gastroenterology",
             "Neurology", "Oncology", "Orthopedics", "Pediatrics",
             "Psychiatry", "Radiology", "Urology"
         )
-         val viewmodel: DoctorViewModel by viewModels()
+        val viewmodel: DoctorViewModel by viewModels()
 
         val firstNameEditText = findViewById<EditText>(R.id.name_edittext)
 
@@ -47,10 +44,10 @@ class DoctorDeatilsActivity : AppCompatActivity() {
         val countryCodeEditText = findViewById<EditText>(R.id.editTextCountryCode)
         val phoneNumberEditText = findViewById<EditText>(R.id.editTextPhoneNumber)
         val submitButton = findViewById<Button>(R.id.button3)
-        val sharedPreferences = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-        val token = sharedPreferences.getString("jwt_token", "")
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, specializations)
+
+        val adapter =
+            ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, specializations)
         specializationAutoComplete.setAdapter(adapter)
         submitButton.setOnClickListener {
             val loadingDialog = LoadingDialogue(this)
@@ -66,8 +63,9 @@ class DoctorDeatilsActivity : AppCompatActivity() {
             val phoneNumber = phoneNumberEditText.text.toString().trim()
 
             // Validate Inputs
-            if (firstName.isEmpty()  || specialization.isEmpty() ||
-                registrationNumber.isEmpty() || phoneNumber.isEmpty() || countryCode.isEmpty()) {
+            if (firstName.isEmpty() || specialization.isEmpty() ||
+                registrationNumber.isEmpty() || phoneNumber.isEmpty() || countryCode.isEmpty()
+            ) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 loadingDialog.dismiss()
                 return@setOnClickListener
@@ -76,7 +74,8 @@ class DoctorDeatilsActivity : AppCompatActivity() {
 
 
             if (!phoneNumber.matches("\\d{10}".toRegex())) {
-                Toast.makeText(this, "Enter a valid 10-digit phone number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Enter a valid 10-digit phone number", Toast.LENGTH_SHORT)
+                    .show()
                 loadingDialog.dismiss()
                 return@setOnClickListener
             }
@@ -100,16 +99,17 @@ class DoctorDeatilsActivity : AppCompatActivity() {
                 hospitalName = "Hospital Name",  // Assuming you have a way to fetch hospital name
                 contactNumber = doctorData["phoneNumber"] ?: ""
             )
-            if (token != null) {
-                viewmodel.updateDoctor(token, doctorDetailsDTO).observe(this,
-                    Observer { doctorResponse ->
 
-                        loadingDialog.dismiss()
-                         startActivity(Intent(this, DashboardActivity::class.java))
+            viewmodel.updateDoctor(doctorDetailsDTO).observe(
+                this,
+                Observer { doctorResponse ->
+
+                    loadingDialog.dismiss()
+                    startActivity(Intent(this, DashboardActivity::class.java))
 
 
-                    })
-            }
+                })
+
 
         }
 

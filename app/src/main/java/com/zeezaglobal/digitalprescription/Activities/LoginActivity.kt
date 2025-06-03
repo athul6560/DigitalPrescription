@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.stripe.android.PaymentConfiguration
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.ViewModel.UserViewModel
+import androidx.core.content.edit
 
 class LoginActivity : AppCompatActivity() {
     private val authViewModel: UserViewModel by viewModels()
@@ -49,16 +50,12 @@ class LoginActivity : AppCompatActivity() {
                         if (!token.token.isNullOrEmpty()) {
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
-                            // Save token in SharedPreferences
+
                             getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                                .edit()
-                                .putString("jwt_token", token.token) // `token` is already a String
-                                .apply()
-                            getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                                .edit()
-                                .putInt("user_id", token.user.id) // `token` is already a String
-                                .apply()
-                            val intent = Intent(this, DoctorDeatilsActivity::class.java)
+                                .edit {
+                                    putInt("user_id", token.user.id) // `token` is already a String
+                                }
+                            val intent = Intent(this, DoctorDetailsActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {

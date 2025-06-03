@@ -15,29 +15,11 @@ import retrofit2.Response
 
 class StripeRepository {
     private val apiService = RetrofitClient.apiService
-    fun attachPaymentMethod(token: String, paymentMethodId: String, customerId: String): LiveData<Boolean> {
-        val liveData = MutableLiveData<Boolean>()
-        val payload = PaymentMethodPayload(
-            paymentMethodId = paymentMethodId,
-            customerId = customerId
-        )
 
-        apiService.attachPaymentMethod("Bearer $token", payload).enqueue(object : Callback<Unit> {
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                liveData.postValue(response.isSuccessful)
-            }
 
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                liveData.postValue(false) // Handle network failure case
-            }
-        })
-
-        return liveData
-    }
-
-    fun createStripeSetupIntent(token: String,customerId: String) {
+    fun createStripeSetupIntent(customerId: String) {
         val request = SetupIntentRequest(customerId)
-        val call = apiService.createSetupIntent("Bearer $token",request)
+        val call = apiService.createSetupIntent(request)
 
         call.enqueue(object : Callback<SetupIntentResponse> {
             override fun onResponse(

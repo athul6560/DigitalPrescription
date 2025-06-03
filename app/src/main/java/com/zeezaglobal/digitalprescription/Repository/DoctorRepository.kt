@@ -16,10 +16,10 @@ import retrofit2.Response
 
 class DoctorRepository() {
     private val apiService = RetrofitClient.apiService
-    fun getDoctor(token: String, doctorId: DoctorId): LiveData<DoctorResponse?> {
+    fun getDoctor( doctorId: DoctorId): LiveData<DoctorResponse?> {
         val doctorLiveData = MutableLiveData<DoctorResponse?>()
 
-        apiService.getDoctor("Bearer $token", doctorId.id).enqueue(object : Callback<DoctorResponse> {
+        apiService.getDoctor( doctorId.id).enqueue(object : Callback<DoctorResponse> {
             override fun onResponse(call: Call<DoctorResponse>, response: Response<DoctorResponse>) {
                 if (response.isSuccessful) {
                     doctorLiveData.postValue(response.body())
@@ -36,10 +36,10 @@ class DoctorRepository() {
         return doctorLiveData
     }
 
-    fun updateDoctor(token: String, doctorDetails: DoctorDetailsDTO): LiveData<DoctorResponse?> {
+    fun updateDoctor(doctorDetails: DoctorDetailsDTO): LiveData<DoctorResponse?> {
         val liveData = MutableLiveData<DoctorResponse>()
 
-        val call = apiService.updateDoctor("Bearer $token", doctorDetails)
+        val call = apiService.updateDoctor( doctorDetails)
         call.enqueue(object : Callback<DoctorResponse> {
             override fun onResponse(
                 call: Call<DoctorResponse>,

@@ -14,10 +14,10 @@ import retrofit2.Response
 
 class PatientRepository {
     private val apiService = RetrofitClient.apiService
-    fun getPatients(token: String,doctorId: Long, page: Int, size: Int): LiveData<PaginatedResponse<Patient>?> {
+    fun getPatients(doctorId: Long, page: Int, size: Int): LiveData<PaginatedResponse<Patient>?> {
         val data = MutableLiveData<PaginatedResponse<Patient>?>()
 
-        apiService.getPatients("Bearer $token",doctorId, page, size).enqueue(object : Callback<PaginatedResponse<Patient>> {
+        apiService.getPatients(doctorId, page, size).enqueue(object : Callback<PaginatedResponse<Patient>> {
             override fun onResponse(call: Call<PaginatedResponse<Patient>>, response: Response<PaginatedResponse<Patient>>) {
                 if (response.isSuccessful) {
                     data.postValue(response.body())
@@ -33,10 +33,10 @@ class PatientRepository {
 
         return data
     }
-     fun searchPatient(token: String, firstName: String): LiveData<List<Patient>> {
+     fun searchPatient( firstName: String): LiveData<List<Patient>> {
         val listOfPatients = MutableLiveData<List<Patient>>()
 
-        apiService.searchPatients("Bearer $token",firstName)
+        apiService.searchPatients(firstName)
             .enqueue(object : Callback<List<Patient>> {
                 override fun onResponse(call: Call<List<Patient>>, response: Response<List<Patient>>) {
                     if (response.isSuccessful) {
@@ -64,10 +64,10 @@ class PatientRepository {
         return listOfPatients
     }
 
-    fun savePatient(token: String, patient: Patient): LiveData<Patient?> {
+    fun savePatient( patient: Patient): LiveData<Patient?> {
         val liveData = MutableLiveData<Patient?>()
 
-        apiService.addPatient("Bearer $token", patient).enqueue(object : Callback<Patient> {
+        apiService.addPatient( patient).enqueue(object : Callback<Patient> {
             override fun onResponse(call: Call<Patient>, response: Response<Patient>) {
                 if (response.isSuccessful) {
                     liveData.postValue(response.body())

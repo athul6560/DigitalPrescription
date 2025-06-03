@@ -33,22 +33,22 @@ interface ApiService {
     fun register( @Body registerData: RegisterData): Call<PostApiResponse>
 
     @GET("doctor/getdata/{doctorId}")
-    fun getDoctor(@Header("Authorization") token: String,  @Path("doctorId") doctorId: Long): Call<DoctorResponse>
+    fun getDoctor( @Path("doctorId") doctorId: Long): Call<DoctorResponse>
 
     @POST("doctor/update")
-    fun updateDoctor(@Header("Authorization") token: String, @Body doctorDetails: DoctorDetailsDTO): Call<DoctorResponse>
+    fun updateDoctor(@Body doctorDetails: DoctorDetailsDTO): Call<DoctorResponse>
 
     @POST("api/patients")
-    fun addPatient(@Header("Authorization") token: String, @Body doctorDetails: Patient): Call<Patient>
+    fun addPatient( @Body doctorDetails: Patient): Call<Patient>
 
     @GET("api/patients/search")
-    fun searchPatients(@Header("Authorization") token: String,
+    fun searchPatients(
         @Query("firstName") firstName: String
     ): Call<List<Patient>>
 
     @GET("api/patients/doctor/{doctorId}")
     fun getPatients(
-        @Header("Authorization") token: String,
+
         @Path("doctorId") doctorId: Long,
         @Query("page") page: Int,
         @Query("size") size: Int,
@@ -59,10 +59,10 @@ interface ApiService {
 
     @POST("api/stripe/setup-intent")
     @Headers("Content-Type: application/json")
-    fun createSetupIntent(@Header("Authorization") token: String,@Body request: SetupIntentRequest): Call<SetupIntentResponse>
+    fun createSetupIntent(@Body request: SetupIntentRequest): Call<SetupIntentResponse>
 
     @POST("api/stripe/attach-payment-method")
     @Headers("Content-Type: application/json")
-     fun attachPaymentMethod(@Header("Authorization") token: String,@Body payload: PaymentMethodPayload): Call<Unit>
+     fun attachPaymentMethod(@Body payload: PaymentMethodPayload): Call<Unit>
 
 }
