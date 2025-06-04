@@ -24,7 +24,7 @@
             android:name=".Activities.WebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.SubscriptionActivity"
+            android:name=".Activities.PaymentActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.QRScannerActivity"

@@ -1,6 +1,5 @@
 package com.zeezaglobal.digitalprescription.Activities
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -11,19 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.Observer
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.Stripe
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
-import com.zeezaglobal.digitalprescription.DTO.PaymentMethodPayload
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.Utils.SharedPreferencesHelper
 import com.zeezaglobal.digitalprescription.ViewModel.PaymentViewModel
 
-class SubscriptionActivity : AppCompatActivity() {
-    private lateinit var yearlyLayout: ConstraintLayout
-    private lateinit var monthlyLayout: ConstraintLayout
+class PaymentActivity : AppCompatActivity() {
+
     private lateinit var paymentBtn: Button
     private lateinit var stripe: Stripe
     private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
@@ -33,25 +29,17 @@ class SubscriptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_subscription)
+        setContentView(R.layout.activity_payment)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        yearlyLayout = findViewById(R.id.yearly_constrain_layout)
-        monthlyLayout = findViewById(R.id.monthly_constrain_layout)
+
         paymentBtn = findViewById(R.id.payment_btn)
         sharedPreferencesHelper = SharedPreferencesHelper(this)
-        yearlyLayout.setOnClickListener {
-            selectPlan(yearlyLayout, monthlyLayout)
-            isMonthly = false
-        }
-        monthlyLayout.setOnClickListener {
-            selectPlan(monthlyLayout, yearlyLayout)
-            isMonthly = true
-        }
+
         paymentBtn.setOnClickListener {
             presentPaymentSheet("pi_3RTyLZCsOvBUMpCY18gr71Wz_secret_iicIMH6lFc69dAurerowymaza")
 
