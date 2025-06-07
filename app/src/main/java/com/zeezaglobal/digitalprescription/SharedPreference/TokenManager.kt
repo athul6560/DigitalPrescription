@@ -1,4 +1,4 @@
-package com.zeezaglobal.digitalprescription.RestApi
+package com.zeezaglobal.digitalprescription.SharedPreference
 
 import android.content.Context
 import android.content.SharedPreferences

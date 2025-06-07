@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -57,5 +59,7 @@ dependencies {
     implementation(libs.retrofit.gson)                 // Gson converter
     implementation(libs.okhttp.logging)                // OkHttp Logging Interceptor
     implementation(libs.gson)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
 }

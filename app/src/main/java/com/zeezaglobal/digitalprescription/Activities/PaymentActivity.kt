@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.Stripe
 import com.stripe.android.paymentsheet.PaymentSheet
@@ -17,14 +18,16 @@ import com.stripe.android.paymentsheet.PaymentSheetResult
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.Utils.SharedPreferencesHelper
 import com.zeezaglobal.digitalprescription.ViewModel.PaymentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PaymentActivity : AppCompatActivity() {
 
     private lateinit var paymentBtn: Button
     private lateinit var stripe: Stripe
     private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
     private var isMonthly = true
-    val viewmodel: PaymentViewModel by viewModels()
+    private val viewModel: PaymentViewModel by viewModels()
     private lateinit var paymentSheet: PaymentSheet
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,9 @@ class PaymentActivity : AppCompatActivity() {
         paymentBtn = findViewById(R.id.payment_btn)
         sharedPreferencesHelper = SharedPreferencesHelper(this)
 
+        viewModel.isButtonEnabled.observe(this, Observer { isEnabled ->
+            paymentBtn.isEnabled = isEnabled
+        })
         paymentBtn.setOnClickListener {
             presentPaymentSheet("pi_3RTyLZCsOvBUMpCY18gr71Wz_secret_iicIMH6lFc69dAurerowymaza")
 
@@ -57,7 +63,7 @@ class PaymentActivity : AppCompatActivity() {
     }
     private fun presentPaymentSheet(clientSecret: String) {
         // Initialize PaymentSheet with the clientSecret and the customer
-        val paymentSheetConfiguration = PaymentSheet.Configuration.Builder("Your Merchant Name")
+        val paymentSheetConfiguration = PaymentSheet.Configuration.Builder("Mediscript")
 
             .build()
 
@@ -85,10 +91,7 @@ class PaymentActivity : AppCompatActivity() {
         }
     }
 
-    private fun selectPlan(selected: ConstraintLayout, other: ConstraintLayout) {
-        selected.setBackgroundResource(R.drawable.selected_border)
-        other.setBackgroundResource(R.drawable.edittext_border)
-    }
+
 
 }
 

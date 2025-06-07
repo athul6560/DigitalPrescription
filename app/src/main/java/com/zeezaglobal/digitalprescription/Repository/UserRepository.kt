@@ -7,7 +7,7 @@ import com.zeezaglobal.digitalprescription.DTO.LoginResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
-import com.zeezaglobal.digitalprescription.RestApi.TokenManager
+import com.zeezaglobal.digitalprescription.SharedPreference.TokenManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,6 +1,7 @@
 [versions]
-agp = "8.5.2"
-kotlin = "1.9.0"
+agp = "8.10.1"
+hiltAndroid = "2.56.2"
+kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -23,6 +24,8 @@ zxing = "4.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripeAndroid" }
 zxingVersion = { group = "com.google.zxing", name = "core", version.ref = "zxingVersion" }
@@ -46,3 +49,5 @@ androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", ve
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+
