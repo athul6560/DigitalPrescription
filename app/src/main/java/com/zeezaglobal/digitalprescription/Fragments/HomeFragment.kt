@@ -36,6 +36,7 @@ import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.Entity.Doctor
 import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.SharedPreference.UserId
 import com.zeezaglobal.digitalprescription.Utils.Constants
 
 import com.zeezaglobal.digitalprescription.Utils.DateUtils
@@ -55,7 +56,7 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
 
     private lateinit var adapter: PatientAdapter
     private var isLoading = false
-    private var doctorId: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,8 +67,7 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        sharedPreferencesHelper = SharedPreferencesHelper(requireContext())
-        doctorId = sharedPreferencesHelper.getUserId()
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -88,7 +88,7 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
         adapter = PatientAdapter(mutableListOf(), this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-        val sharedPreferences = requireContext().getSharedPreferences("APP_PREFS", 0)
+
 
 
         searchIcon.setOnClickListener {
@@ -152,18 +152,17 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
                 val totalItemCount = layoutManager.itemCount
 
                 if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
-                    viewModel.loadPatients( doctorId)
+                    viewModel.loadPatients( UserId.getId().toLong())
                 }
             }
         })
 
-        viewModel.loadPatients( doctorId) // Initial load
+        viewModel.loadPatients( UserId.getId().toLong()) // Initial load
 
 
-        val id = sharedPreferences.getInt("user_id", -1).takeIf { it != -1 }?.toLong()
-            ?: 0L // Default to 0L if -1
 
-        val doctorId = DoctorId(id)// Replace with actual doctor ID, possibly passed as an argument
+
+        val doctorId = DoctorId(UserId.getId().toLong())// Replace with actual doctor ID, possibly passed as an argument
         addPatientTextView.setOnClickListener {
             startActivity(Intent(requireContext(), PaymentActivity::class.java))
             // showCustomPopup()
