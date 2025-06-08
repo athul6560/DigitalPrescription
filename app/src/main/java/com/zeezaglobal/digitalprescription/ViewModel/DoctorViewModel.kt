@@ -15,7 +15,5 @@ class DoctorViewModel() : ViewModel() {
     fun updateDoctor( doctorDetails: DoctorDetailsDTO): LiveData<DoctorResponse?> {
         return repository.updateDoctor( doctorDetails)
     }
-    fun getDoctor( doctorId: DoctorId): LiveData<DoctorResponse?> {
-        return repository.getDoctor( doctorId)
-    }
+
 }

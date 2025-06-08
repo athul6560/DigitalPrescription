@@ -17,28 +17,20 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @HiltViewModel
-class PaymentViewModel @Inject constructor(private val stripeRepository: StripeRepository) : ViewModel() {
+class PaymentViewModel @Inject constructor(
+    private val stripeRepository: StripeRepository
+) : ViewModel() {
 
-    private val _clientSecret = MutableLiveData<String>()
-    val clientSecret: LiveData<String> = _clientSecret
-
-
-    fun createSetupIntent( customerId: String) {
-        stripeRepository.createStripeSetupIntent( customerId)
-    }
+    private val _clientSecret = MutableLiveData<String?>()
+    val clientSecret: LiveData<String?> = _clientSecret
 
     private val _isButtonEnabled = MutableLiveData(false)
     val isButtonEnabled: LiveData<Boolean> get() = _isButtonEnabled
 
-    fun enableButton() {
-        _isButtonEnabled.value = true
-    }
-
-    fun disableButton() {
-        _isButtonEnabled.value = false
-    }
-
-    fun toggleButton() {
-        _isButtonEnabled.value = !(_isButtonEnabled.value ?: true)
+    fun createSetupIntent() {
+        stripeRepository.createStripeSetupIntent().observeForever { secret ->
+            _clientSecret.postValue(secret)
+            _isButtonEnabled.postValue(!secret.isNullOrBlank()) // Enable button only if secret is not null or blank
+        }
     }
 }

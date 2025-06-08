@@ -16,6 +16,7 @@ import com.stripe.android.PaymentConfiguration
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.ViewModel.UserViewModel
 import androidx.core.content.edit
+import com.zeezaglobal.digitalprescription.SharedPreference.UserId
 
 class LoginActivity : AppCompatActivity() {
     private val authViewModel: UserViewModel by viewModels()
@@ -51,10 +52,8 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
 
 
-                            getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                                .edit {
-                                    putInt("user_id", token.user.id) // `token` is already a String
-                                }
+
+                            UserId.setId( token.user.id)
                             val intent = Intent(this, DoctorDetailsActivity::class.java)
                             startActivity(intent)
                             finish()

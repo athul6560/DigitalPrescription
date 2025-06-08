@@ -61,8 +61,6 @@ interface ApiService {
     @Headers("Content-Type: application/json")
     fun createSetupIntent(@Body request: SetupIntentRequest): Call<SetupIntentResponse>
 
-    @POST("api/stripe/attach-payment-method")
-    @Headers("Content-Type: application/json")
-     fun attachPaymentMethod(@Body payload: PaymentMethodPayload): Call<Unit>
+
 
 }

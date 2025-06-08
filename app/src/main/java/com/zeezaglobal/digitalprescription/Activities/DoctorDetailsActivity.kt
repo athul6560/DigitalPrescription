@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import com.zeezaglobal.digitalprescription.DTO.DoctorDetailsDTO
 import com.zeezaglobal.digitalprescription.Dialoge.LoadingDialogue
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.SharedPreference.UserId
 import com.zeezaglobal.digitalprescription.ViewModel.DoctorViewModel
 
 class DoctorDetailsActivity : AppCompatActivity() {
@@ -88,8 +89,8 @@ class DoctorDetailsActivity : AppCompatActivity() {
                 "registrationNumber" to registrationNumber,
                 "phoneNumber" to "$countryCode$phoneNumber"
             )
-            val sharedPreferences = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-            val userId = sharedPreferences.getInt("user_id", -1)
+
+            val userId = UserId.getId()
             val doctorDetailsDTO = DoctorDetailsDTO(
                 id = userId,  // Assuming you will provide an id or fetch it later
                 firstName = doctorData["firstName"] ?: "",

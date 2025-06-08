@@ -26,7 +26,8 @@ class PaymentActivity : AppCompatActivity() {
     private lateinit var paymentBtn: Button
     private lateinit var stripe: Stripe
     private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
-    private var isMonthly = true
+
+    lateinit var clientSecretValue: String
     private val viewModel: PaymentViewModel by viewModels()
     private lateinit var paymentSheet: PaymentSheet
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +43,18 @@ class PaymentActivity : AppCompatActivity() {
 
         paymentBtn = findViewById(R.id.payment_btn)
         sharedPreferencesHelper = SharedPreferencesHelper(this)
-
+        viewModel.createSetupIntent()
+        viewModel.clientSecret.observe(this) { secret ->
+            if (secret != null) {
+                clientSecretValue = secret
+            }
+        }
         viewModel.isButtonEnabled.observe(this, Observer { isEnabled ->
             paymentBtn.isEnabled = isEnabled
         })
         paymentBtn.setOnClickListener {
-            presentPaymentSheet("pi_3RTyLZCsOvBUMpCY18gr71Wz_secret_iicIMH6lFc69dAurerowymaza")
+
+            presentPaymentSheet(clientSecretValue)
 
         }
         paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
@@ -56,11 +63,13 @@ class PaymentActivity : AppCompatActivity() {
             applicationContext,
             "pk_test_51QB0leCsOvBUMpCYLGzCsPDnPdyRI7XwsJ2fLuEBDRAQQl7LqvK3kTCT0AJwP40dKPK28Ghs7HkLtfEhBwiiNpAx00ElUqv6HL"
         )
-      //  paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
+        //  paymentSheet = PaymentSheet(this, ::onPaymentSheetResult)
         stripe = Stripe(this, PaymentConfiguration.getInstance(this).publishableKey)
 
 
     }
+
+
     private fun presentPaymentSheet(clientSecret: String) {
         // Initialize PaymentSheet with the clientSecret and the customer
         val paymentSheetConfiguration = PaymentSheet.Configuration.Builder("Mediscript")
@@ -80,17 +89,22 @@ class PaymentActivity : AppCompatActivity() {
                 Toast.makeText(this, "Payment successful!", Toast.LENGTH_LONG).show()
 
             }
+
             is PaymentSheetResult.Canceled -> {
                 Log.d("Stripe", "Payment canceled by user.")
                 Toast.makeText(this, "Payment canceled", Toast.LENGTH_SHORT).show()
             }
+
             is PaymentSheetResult.Failed -> {
                 Log.e("Stripe", "Payment failed: ${paymentSheetResult.error.message}")
-                Toast.makeText(this, "Payment failed: ${paymentSheetResult.error.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Payment failed: ${paymentSheetResult.error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
-
 
 
 }

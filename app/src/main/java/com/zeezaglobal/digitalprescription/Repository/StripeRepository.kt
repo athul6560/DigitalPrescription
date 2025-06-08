@@ -9,6 +9,7 @@ import com.zeezaglobal.digitalprescription.DTO.PaymentResponse
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentResponse
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
+import com.zeezaglobal.digitalprescription.SharedPreference.UserId
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,9 +17,10 @@ import retrofit2.Response
 class StripeRepository {
     private val apiService = RetrofitClient.apiService
 
+    fun createStripeSetupIntent(): LiveData<String?> {
+        val clientSecretLiveData = MutableLiveData<String?>()
 
-    fun createStripeSetupIntent(customerId: String) {
-        val request = SetupIntentRequest(customerId)
+        val request = SetupIntentRequest(UserId.getId().toString())
         val call = apiService.createSetupIntent(request)
 
         call.enqueue(object : Callback<SetupIntentResponse> {
@@ -28,16 +30,19 @@ class StripeRepository {
             ) {
                 if (response.isSuccessful) {
                     val clientSecret = response.body()?.clientSecret
-                    Log.d("Stripe", "Client Secret: $clientSecret")
+                    clientSecretLiveData.postValue(clientSecret)
                 } else {
                     Log.e("Stripe", "Request failed: ${response.code()}")
+                    clientSecretLiveData.postValue(null)
                 }
             }
 
             override fun onFailure(call: Call<SetupIntentResponse>, t: Throwable) {
                 Log.e("Stripe", "Network error: ${t.message}")
+                clientSecretLiveData.postValue(null)
             }
         })
-    }
 
+        return clientSecretLiveData
+    }
 }
