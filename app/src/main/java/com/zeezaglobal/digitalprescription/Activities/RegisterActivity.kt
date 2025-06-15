@@ -22,7 +22,7 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_register)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -35,72 +35,37 @@ class RegisterActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val passwordEditText = findViewById<EditText>(R.id.editTextTextPassword)
         val registerButton = findViewById<Button>(R.id.button)
-      val  confirmPasswordEditText = findViewById<EditText>(R.id.editTextConfirmPassword)
+        val confirmPasswordEditText = findViewById<EditText>(R.id.editTextConfirmPassword)
         // Handle the Register Button click
+
+        authViewModel.buttonStatus.observe(this) { status ->
+            if (status != null) {
+                registerButton.isEnabled = status
+            }
+        }
+
+
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
             val confirmPassword = confirmPasswordEditText.text.toString().trim()
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                // Validate the email format
-                if (!isValidEmail(email)) {
-                    Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
+            authViewModel.register(email, password, confirmPassword).observe(this) { response ->
+                if (response != null) {
+                    registerButton.isEnabled = response.status
+                    if (response.status) {
 
-                if (password != confirmPassword) {
-                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                // Validate password format
-                if (!isValidPassword(password)) {
-                    Toast.makeText(this, "Password must be at least 6 characters, contain upper and lower case letters, and include a number", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
+                        Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+                        finish()
 
-                // Call the ViewModel's register function (with correct order of arguments)
-                progressBar.visibility = ProgressBar.VISIBLE
-                authViewModel.register(email, password)
-                    .observe(this, Observer { responseMessage ->
-                        progressBar.visibility = ProgressBar.GONE
-                        if (responseMessage != null) {
-                            if (responseMessage.message != "") {
-                                Toast.makeText(
-                                    this,
-                                    "" + responseMessage.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                val intent = Intent(this, LoginActivity::class.java)
-                                startActivity(intent)
-                                finish()
-                            } else {
-                                Toast.makeText(
-                                    this,
-                                    "Register Failed: " + responseMessage.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        } else {
-                            progressBar.visibility = ProgressBar.GONE
-                            Toast.makeText(this, "User Already Exists", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-            } else {
-                progressBar.visibility = ProgressBar.GONE
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
+
         }
     }
-
-    // Function to validate email format
-    private fun isValidEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    // Function to validate password format
-    private fun isValidPassword(password: String): Boolean {
-        // Password should be at least 6 characters long, contain both uppercase and lowercase letters, and have at least one number
-        val passwordPattern = "(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{6,}".toRegex()
-        return password.matches(passwordPattern)
-    }
 }
+
+
+

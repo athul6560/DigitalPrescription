@@ -19,21 +19,29 @@ class UserRepository {
         val user = RegisterData(password, email)
 
         apiService.register(user).enqueue(object : Callback<PostApiResponse> {
-            override fun onResponse(call: Call<PostApiResponse>, response: Response<PostApiResponse>) {
-                if (response.isSuccessful) {
-                    liveData.postValue(response.body())
+            override fun onResponse(
+                call: Call<PostApiResponse>,
+                response: Response<PostApiResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    val body = response.body()
+                    liveData.postValue(
+                        PostApiResponse(true, body?.message ?: "Registration successful")
+                    )
                 } else {
-                    liveData.postValue(null) // Handle failure case
+                    val errorMsg = response.errorBody()?.string() ?: "Registration failed"
+                    liveData.postValue(PostApiResponse(false, errorMsg))
                 }
             }
 
             override fun onFailure(call: Call<PostApiResponse>, t: Throwable) {
-                liveData.postValue(null) // Handle network failure case
+                liveData.postValue(PostApiResponse(false, "Network error: ${t.message}"))
             }
         })
 
         return liveData
     }
+
     fun login(email: String, password: String): LiveData<LoginResponse?> {
         val tokenData = MutableLiveData<LoginResponse?>()
         val user = LoginData(email, password)
@@ -46,7 +54,7 @@ class UserRepository {
                     if (responseBody != null) {
                         TokenManager.setToken(responseBody.token)
                     }
-                // Store the token from the response
+                    // Store the token from the response
                 } else {
                     tokenData.postValue(null) // API returned an error response
                 }
