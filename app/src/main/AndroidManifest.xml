@@ -9,8 +9,8 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:allowBackup="false"
         android:name=".Application.MyApp"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -20,6 +20,11 @@
         android:theme="@style/Theme.DigitalPrescription"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Activities.MedicalHistoryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_medical_history"
+            android:theme="@style/Theme.DigitalPrescription" />
         <activity
             android:name=".Activities.WebViewActivity"
             android:exported="false" />

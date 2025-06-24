@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Digital Prescription</string>
+    <string name="title_activity_medical_history">MedicalHistoryActivity</string>
 </resources>

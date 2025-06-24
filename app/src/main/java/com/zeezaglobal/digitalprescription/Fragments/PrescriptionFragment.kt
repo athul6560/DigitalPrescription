@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.zeezaglobal.digitalprescription.Activities.MedicalHistoryActivity
 import com.zeezaglobal.digitalprescription.Activities.PdfActivity
 import com.zeezaglobal.digitalprescription.Entity.Patient
 
@@ -34,6 +35,7 @@ class PrescriptionFragment : Fragment() {
     private lateinit var patientName: TextView
     private lateinit var phoneNumber: TextView
     private lateinit var ageText: TextView
+    private lateinit var viewHistory: TextView
 
     private var patient: Patient? = null
     private val drugList =
@@ -86,6 +88,7 @@ class PrescriptionFragment : Fragment() {
         patientName = view.findViewById(R.id.patient_name)
         phoneNumber = view.findViewById(R.id.phone_number_text)
         ageText = view.findViewById(R.id.age_text)
+        viewHistory = view.findViewById(R.id.view_history)
 
 
         if (patient != null)
@@ -99,6 +102,10 @@ class PrescriptionFragment : Fragment() {
             val selectedDrug = parent.getItemAtPosition(position) as String
             drugName.text =
                 selectedDrug + " - 500mg" // Set the selected drug name into the TextView
+        }
+        viewHistory.setOnClickListener{
+            val intent = Intent(requireContext(), MedicalHistoryActivity::class.java)
+            startActivity(intent)
         }
         // Set up the button click listener
         generateButton.setOnClickListener {
