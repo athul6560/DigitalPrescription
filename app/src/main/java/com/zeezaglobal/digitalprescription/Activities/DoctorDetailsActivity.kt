@@ -53,7 +53,7 @@ class DoctorDetailsActivity : AppCompatActivity() {
         submitButton.setOnClickListener {
             val loadingDialog = LoadingDialogue(this)
             loadingDialog.show("Fetching data...")
-// To dismiss
+
 
             // Collect Data
             val firstName = firstNameEditText.text.toString().trim()

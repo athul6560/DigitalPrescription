@@ -98,15 +98,13 @@
         </RelativeLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:layout_width="140dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="24dp"
             android:background="@drawable/rounded_background"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/relativeLayout2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/name"
             app:layout_constraintTop_toTopOf="@+id/name">
 
             <TextView

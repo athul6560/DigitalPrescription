@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.zeezaglobal.digitalprescription.Activities.DashboardActivity
+import com.zeezaglobal.digitalprescription.Activities.LoginActivity
 import com.zeezaglobal.digitalprescription.Activities.QRScannerActivity
 import com.zeezaglobal.digitalprescription.Activities.PaymentActivity
 import com.zeezaglobal.digitalprescription.Adapter.PatientAdapter
@@ -36,6 +37,7 @@ import com.zeezaglobal.digitalprescription.DTO.DoctorId
 import com.zeezaglobal.digitalprescription.Entity.Doctor
 import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.R
+import com.zeezaglobal.digitalprescription.SharedPreference.TokenManager
 import com.zeezaglobal.digitalprescription.SharedPreference.UserId
 import com.zeezaglobal.digitalprescription.Utils.Constants
 
@@ -52,7 +54,6 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
 
     private val viewModel: HomeViewModel by viewModels()
 
-    private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
 
     private lateinit var adapter: PatientAdapter
     private var isLoading = false
@@ -152,23 +153,26 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
                 val totalItemCount = layoutManager.itemCount
 
                 if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
-                    viewModel.loadPatients( UserId.getId().toLong())
+                    viewModel.loadPatients(UserId.getId().toLong())
                 }
             }
         })
 
-        viewModel.loadPatients( UserId.getId().toLong()) // Initial load
+        viewModel.loadPatients(UserId.getId().toLong()) // Initial load
 
 
-
-
-        val doctorId = DoctorId(UserId.getId().toLong())// Replace with actual doctor ID, possibly passed as an argument
+        val doctorId = DoctorId(UserId.getId().toLong())
         addPatientTextView.setOnClickListener {
-            startActivity(Intent(requireContext(), PaymentActivity::class.java))
-            // showCustomPopup()
+            if (false) {
+                startActivity(Intent(requireContext(), PaymentActivity::class.java))
+            } else {
+                showCustomPopup()
+            }
+
+
         }
 
-        viewModel.getDoctor( doctorId)
+        viewModel.getDoctor(doctorId)
             .observe(viewLifecycleOwner, Observer { doctorResponse ->
                 if (doctorResponse != null) {
                     doctorNameTextView.text =
@@ -177,16 +181,21 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "Failed to fetch doctor details",
+                        "Session expired. Please log in again.",
                         Toast.LENGTH_SHORT
                     ).show()
+                    TokenManager.clearToken()
+                    // Go to LoginActivity and clear back stack
+                    val intent = Intent(requireActivity(), LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
                 }
             })
 
     }
 
     private fun getSearchDataToRecyclercview(text: String) {
-        viewModel.searchPatient( text)
+        viewModel.searchPatient(text)
         viewModel.patientsSearch.observe(viewLifecycleOwner, Observer { patients ->
 
             adapter.updatePatients(patients)
@@ -264,11 +273,11 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
                 email = email.text.toString(),
                 address = address.text.toString(),
                 medicalHistory = medicalHistory.text.toString(),
-                Doctor(sharedPreferencesHelper.getUserId())
+                Doctor(UserId.getId().toLong())
             )
 
 
-            viewModel.saveNewPatient( patientDetails)
+            viewModel.saveNewPatient(patientDetails)
                 .observe(viewLifecycleOwner) { response ->
                     if (response != null) {
                         Toast.makeText(

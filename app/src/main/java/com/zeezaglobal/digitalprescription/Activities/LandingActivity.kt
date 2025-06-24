@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.RestApi.ApiService
 import com.zeezaglobal.digitalprescription.RestApi.RetrofitClient
+import com.zeezaglobal.digitalprescription.SharedPreference.TokenManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,14 +44,11 @@ class LandingActivity : AppCompatActivity() {
     }
 
     private fun validateToken() {
-        val sharedPreferences = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-        val token = sharedPreferences.getString("jwt_token", null)
 
-        if (token.isNullOrEmpty()) {
+
+        if (TokenManager.getToken().isNullOrEmpty()) {
             return // No token found, stay on the landing page
-        }
-
-   else{
+        } else {
             startActivity(Intent(this@LandingActivity, DashboardActivity::class.java))
             finish()
 
