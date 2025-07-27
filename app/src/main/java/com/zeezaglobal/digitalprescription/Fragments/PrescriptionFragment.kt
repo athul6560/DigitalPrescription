@@ -3,33 +3,27 @@ package com.zeezaglobal.digitalprescription.Fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zeezaglobal.digitalprescription.Activities.MedicalHistoryActivity
-import com.zeezaglobal.digitalprescription.Activities.PdfActivity
 import com.zeezaglobal.digitalprescription.Adapter.PrescriptionAdapter
 import com.zeezaglobal.digitalprescription.Entity.Patient
-import com.zeezaglobal.digitalprescription.Entity.Prescription
 
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.Utils.AgeUtils
 import com.zeezaglobal.digitalprescription.Utils.Constants
+import com.zeezaglobal.digitalprescription.ViewModel.PrescriptionViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PrescriptionFragment : Fragment() {
 
 
@@ -43,8 +37,7 @@ class PrescriptionFragment : Fragment() {
     private lateinit var viewHistory: TextView
 
     private var patient: Patient? = null
-    private val drugList =
-        listOf("Paracetamol", "Ibuprofen", "Aspirin", "Amoxicillin", "Cetirizine", "Lorazepam")
+
 
     companion object {
         fun newInstance() = PrescriptionFragment()
@@ -93,22 +86,33 @@ class PrescriptionFragment : Fragment() {
         viewHistory = view.findViewById(R.id.view_history)
         prescriptionRecyclerView = view.findViewById(R.id.prescription_rv)
         prescriptionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        // Dummy data
+        prescriptionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val prescriptions = listOf(
-            Prescription(1, "John Doe", "Dr. Smith", "2025-07-12"),
-            Prescription(2, "Jane Roe", "Dr. Adams", "2025-07-10"),
-            Prescription(3, "Alice Ray", "Dr. Brown", "2025-07-09")
-        )
 
-        adapter = PrescriptionAdapter(prescriptions)
+
+        adapter = PrescriptionAdapter(emptyList())
         prescriptionRecyclerView.adapter = adapter
 
-        if (patient != null)
+
+        if (patient != null) {
             patientName.text = patient?.firstName
-        else patientName.text = "No Patient Selected"
-        // Set up the ArrayAdapter for the drug list
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, drugList)
+            phoneNumber.text = patient?.contactNumber
+            ageText.text = AgeUtils.calculateAge(patient?.dateOfBirth)
+
+            // Trigger fetching prescriptions
+            viewModel.fetchPrescriptionsForPatient(patient!!.id)
+
+            // Observe prescriptions LiveData once
+            viewModel.prescriptions.observe(viewLifecycleOwner) { prescriptions ->
+                Toast.makeText(requireContext(), prescriptions.size.toString(), Toast.LENGTH_SHORT).show()
+                adapter.updateData(prescriptions)
+            }
+        } else {
+            patientName.text = "No Patient Selected"
+            phoneNumber.text = ""
+            ageText.text = ""
+        }
 
         viewHistory.setOnClickListener{
             val intent = Intent(requireContext(), MedicalHistoryActivity::class.java)

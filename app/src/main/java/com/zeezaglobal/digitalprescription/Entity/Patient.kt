@@ -2,6 +2,7 @@ package com.zeezaglobal.digitalprescription.Entity
 
 data class Patient(
     val numberOfVisit: Int,
+    val id: Long =0,
     val firstName: String,
     val lastName: String,
     val dateOfBirth: String,
@@ -13,6 +14,3 @@ data class Patient(
     val doctor: Doctor
 )
 
-data class Doctor(
-    val id: Long
-)

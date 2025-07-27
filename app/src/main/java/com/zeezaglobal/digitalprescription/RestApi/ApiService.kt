@@ -13,6 +13,7 @@ import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentResponse
 import com.zeezaglobal.digitalprescription.Entity.Patient
+import com.zeezaglobal.digitalprescription.Entity.Prescription
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -34,6 +35,10 @@ interface ApiService {
 
     @GET("doctor/getdata/{doctorId}")
     fun getDoctor( @Path("doctorId") doctorId: Long): Call<DoctorResponse>
+
+    @GET("api/prescriptions/patient/{patientId}")
+    suspend fun getPrescriptions(@Path("patientId") patientId: Long): List<Prescription>
+
 
     @POST("doctor/update")
     fun updateDoctor(@Body doctorDetails: DoctorDetailsDTO): Call<DoctorResponse>

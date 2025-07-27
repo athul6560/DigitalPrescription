@@ -273,7 +273,8 @@ class HomeFragment : Fragment(), PatientAdapter.OnPatientClickListener {
                 email = email.text.toString(),
                 address = address.text.toString(),
                 medicalHistory = medicalHistory.text.toString(),
-                Doctor(UserId.getId().toLong())
+                doctor = Doctor(id = 1),
+
             )
 
 

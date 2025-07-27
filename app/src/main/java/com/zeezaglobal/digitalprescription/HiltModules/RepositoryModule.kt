@@ -1,6 +1,10 @@
 package com.zeezaglobal.digitalprescription.HiltModules
 
+import com.zeezaglobal.digitalprescription.Repository.PrescriptionRepository
+import com.zeezaglobal.digitalprescription.Repository.PrescriptionRepositoryImpl
 import com.zeezaglobal.digitalprescription.Repository.StripeRepository
+import com.zeezaglobal.digitalprescription.RestApi.ApiService
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +20,10 @@ object RepositoryModule {
 
     fun provideStripeRepository(): StripeRepository {
         return StripeRepository()
+    }
+    @Provides
+
+    fun providePrescriptionRepository(): PrescriptionRepository {
+        return PrescriptionRepositoryImpl()
     }
 }

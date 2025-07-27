@@ -1,6 +1,6 @@
 package com.zeezaglobal.digitalprescription.Entity
 data class Drug(
-    val id: Long? = null,
+    val id: Long,
     val serialNumber: Int,
     val type: String,
     val name: String,
