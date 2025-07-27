@@ -41,107 +41,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="Search Drug"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Prescriptions"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
-
-        <AutoCompleteTextView
-            android:id="@+id/search_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:hint="Eg: Paracetombol"
-            android:inputType="text"
-            android:padding="15dp"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView18" />
-
-        <TextView
-            android:id="@+id/textView19"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Duration"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_edittext" />
-
-        <RadioGroup
-            android:id="@+id/radio_group_duration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView19">
-
-            <RadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_selector"
-                android:button="@null"
-                android:fontFamily="@font/poppins_medium"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="5 \ndays" />
-
-            <RadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_selector"
-                android:button="@null"
-                android:fontFamily="@font/poppins_medium"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="10 \ndays" />
-
-            <RadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_selector"
-                android:button="@null"
-                android:fontFamily="@font/poppins_medium"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="15 \ndays" />
-
-            <RadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_selector"
-                android:button="@null"
-                android:fontFamily="@font/poppins_medium"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="30 \ndays" />
-
-            <RadioButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_selector"
-                android:button="@null"
-                android:fontFamily="@font/poppins_medium"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="60 \ndays" />
-        </RadioGroup>
 
         <Button
             android:id="@+id/button4"
@@ -154,43 +59,6 @@
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/drug_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/poppins_medium"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radio_group_duration" />
-
-        <EditText
-            android:id="@+id/remark_feild"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/edittext_rounded"
-            android:ems="10"
-            android:fontFamily="@font/poppins"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:padding="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView15" />
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Remarks"
-            app:layout_constraintStart_toStartOf="@+id/remark_feild"
-            app:layout_constraintTop_toBottomOf="@+id/drug_name" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -283,6 +151,30 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+
+            android:clickable="true"
+            android:src="@drawable/stripe_link_add_green"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:id="@+id/prescription_rv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

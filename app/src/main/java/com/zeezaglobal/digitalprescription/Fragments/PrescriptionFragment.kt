@@ -18,20 +18,25 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.zeezaglobal.digitalprescription.Activities.MedicalHistoryActivity
 import com.zeezaglobal.digitalprescription.Activities.PdfActivity
+import com.zeezaglobal.digitalprescription.Adapter.PrescriptionAdapter
 import com.zeezaglobal.digitalprescription.Entity.Patient
+import com.zeezaglobal.digitalprescription.Entity.Prescription
 
 import com.zeezaglobal.digitalprescription.R
 import com.zeezaglobal.digitalprescription.Utils.AgeUtils
 import com.zeezaglobal.digitalprescription.Utils.Constants
 
 class PrescriptionFragment : Fragment() {
-    private lateinit var searchEditText: AutoCompleteTextView
-    private lateinit var durationRadioGroup: RadioGroup
+
+
     private lateinit var generateButton: Button
-    private lateinit var drugName: TextView
-    private lateinit var remarks: EditText
+
+    private lateinit var prescriptionRecyclerView: RecyclerView
+    private lateinit var adapter: PrescriptionAdapter
     private lateinit var patientName: TextView
     private lateinit var phoneNumber: TextView
     private lateinit var ageText: TextView
@@ -79,17 +84,24 @@ class PrescriptionFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_prescription, container, false)
 
-        // Initialize the views using the inflated view
-        searchEditText = view.findViewById(R.id.search_edittext)
-        durationRadioGroup = view.findViewById(R.id.radio_group_duration)
+
         generateButton = view.findViewById(R.id.button4)
-        drugName = view.findViewById(R.id.drug_name)
-        remarks = view.findViewById(R.id.remark_feild)
+
         patientName = view.findViewById(R.id.patient_name)
         phoneNumber = view.findViewById(R.id.phone_number_text)
         ageText = view.findViewById(R.id.age_text)
         viewHistory = view.findViewById(R.id.view_history)
+        prescriptionRecyclerView = view.findViewById(R.id.prescription_rv)
+        prescriptionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        val prescriptions = listOf(
+            Prescription(1, "John Doe", "Dr. Smith", "2025-07-12"),
+            Prescription(2, "Jane Roe", "Dr. Adams", "2025-07-10"),
+            Prescription(3, "Alice Ray", "Dr. Brown", "2025-07-09")
+        )
+
+        adapter = PrescriptionAdapter(prescriptions)
+        prescriptionRecyclerView.adapter = adapter
 
         if (patient != null)
             patientName.text = patient?.firstName
@@ -97,37 +109,12 @@ class PrescriptionFragment : Fragment() {
         // Set up the ArrayAdapter for the drug list
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, drugList)
-        searchEditText.setAdapter(adapter)
-        searchEditText.setOnItemClickListener { parent, view, position, id ->
-            val selectedDrug = parent.getItemAtPosition(position) as String
-            drugName.text =
-                selectedDrug + " - 500mg" // Set the selected drug name into the TextView
-        }
+
         viewHistory.setOnClickListener{
             val intent = Intent(requireContext(), MedicalHistoryActivity::class.java)
             startActivity(intent)
         }
-        // Set up the button click listener
-        generateButton.setOnClickListener {
-            val selectedDurationId = durationRadioGroup.checkedRadioButtonId
-            if (selectedDurationId != -1) {
-                val selectedRadioButton: RadioButton = view.findViewById(selectedDurationId)
-                val selectedDuration = selectedRadioButton.text.toString()
 
-                // Handle the selected duration and drug search
-                val drugName = searchEditText.text.toString()
-                val remark = remarks.text.toString()
-                if (drugName.isNotEmpty()) {
-                    val intent = Intent(requireContext(), PdfActivity::class.java)
-                    intent.putExtra("drug_name", drugName)
-                    intent.putExtra("duration", selectedDuration)
-                    intent.putExtra("remark", remark)
-
-                    // Start PdfActivity with the intent
-                    startActivity(intent)
-                }
-            }
-        }
         return view
     }
 }

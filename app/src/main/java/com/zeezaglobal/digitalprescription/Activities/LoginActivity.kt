@@ -50,10 +50,16 @@ class LoginActivity : AppCompatActivity() {
                     if (token != null) {
                         if (!token.token.isNullOrEmpty()) {
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                            UserId.setId( token.user.id)
-                            val intent = Intent(this, DoctorDetailsActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            UserId.setId(token.user.id)
+                            if (token.user.isValidated == 1) {
+                                val intent = Intent(this, DashboardActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                val intent = Intent(this, DoctorDetailsActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
                         } else {
                             Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
                         }
