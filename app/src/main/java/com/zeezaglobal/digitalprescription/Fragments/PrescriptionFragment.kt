@@ -91,8 +91,8 @@ class PrescriptionFragment : Fragment() {
         val floatingActionButton = view.findViewById<ConstraintLayout>(R.id.floatingActionBtn)
 
         floatingActionButton.setOnClickListener {
-            Toast.makeText(requireContext(), "FAB clicked", Toast.LENGTH_SHORT).show()
-            // Navigate or open a dialog, etc.
+            val bottomSheet = BottomSheetFragment()
+            bottomSheet.show(parentFragmentManager, "BottomSheet")
         }
         prescriptionRecyclerView = view.findViewById(R.id.prescription_rv)
         prescriptionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
