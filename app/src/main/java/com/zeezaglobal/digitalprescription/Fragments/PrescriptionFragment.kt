@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zeezaglobal.digitalprescription.Activities.MedicalHistoryActivity
 import com.zeezaglobal.digitalprescription.Adapter.PrescriptionAdapter
 import com.zeezaglobal.digitalprescription.Entity.Patient
@@ -50,6 +52,7 @@ class PrescriptionFragment : Fragment() {
         patient = Constants.currentPatient
         // Toast.makeText(requireContext(), patient?.firstName + "", Toast.LENGTH_SHORT).show()
 
+
         // You can reinitialize or refresh any data that needs to be updated here
         if (patient != null) {
             patientName.text = patient?.firstName
@@ -83,7 +86,14 @@ class PrescriptionFragment : Fragment() {
         patientName = view.findViewById(R.id.patient_name)
         phoneNumber = view.findViewById(R.id.phone_number_text)
         ageText = view.findViewById(R.id.age_text)
+
         viewHistory = view.findViewById(R.id.view_history)
+        val floatingActionButton = view.findViewById<ConstraintLayout>(R.id.floatingActionBtn)
+
+        floatingActionButton.setOnClickListener {
+            Toast.makeText(requireContext(), "FAB clicked", Toast.LENGTH_SHORT).show()
+            // Navigate or open a dialog, etc.
+        }
         prescriptionRecyclerView = view.findViewById(R.id.prescription_rv)
         prescriptionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         // Dummy data
@@ -105,7 +115,7 @@ class PrescriptionFragment : Fragment() {
 
             // Observe prescriptions LiveData once
             viewModel.prescriptions.observe(viewLifecycleOwner) { prescriptions ->
-                Toast.makeText(requireContext(), prescriptions.size.toString(), Toast.LENGTH_SHORT).show()
+
                 adapter.updateData(prescriptions)
             }
         } else {
