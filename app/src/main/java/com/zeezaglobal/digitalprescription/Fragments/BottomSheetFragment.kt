@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zeezaglobal.digitalprescription.Adapter.DrugAdapter
 import com.zeezaglobal.digitalprescription.Entity.Drug
+import com.zeezaglobal.digitalprescription.Entity.PrescribedDrug
 import com.zeezaglobal.digitalprescription.R
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
@@ -37,29 +38,37 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             // ... more drugs
         )
         // Sample dummy data
-        val drugList = listOf(
-            Drug(
-                1,
-                1,
-                "Analgesic",
-                "Paracetamol",
-                "Pain reliever and fever reducer",
-                "Analgesic",
-                "Tablet"
+        val prescribedDrugList = listOf(
+            PrescribedDrug(
+                drugName = "Paracetamol",
+                form = "Tablet",
+                weight = 500.0,
+                dosage = "1 tablet",
+                frequencyPerDay = 2,
+                durationDays = 5,
+                instructions = "After breakfast"
             ),
-            Drug(
-                2,
-                2,
-                "Antibiotic",
-                "Amoxicillin",
-                "Used for bacterial infections",
-                "Antibiotic",
-                "Capsule"
+            PrescribedDrug(
+                drugName = "Amoxicillin",
+                form = "Capsule",
+                weight = 250.0,
+                dosage = "1 capsule",
+                frequencyPerDay = 3,
+                durationDays = 7,
+                instructions = "After meal"
             ),
-            Drug(3, 3, "NSAID", "Ibuprofen", "Anti-inflammatory drug", "NSAID", "Tablet")
+            PrescribedDrug(
+                drugName = "Ibuprofen",
+                form = "Tablet",
+                weight = 400.0,
+                dosage = "1 tablet",
+                frequencyPerDay = 2,
+                durationDays = 5,
+                instructions = "After lunch"
+            )
         )
         val drugNames = drugListFull.map { it.name }
-        adapter = DrugAdapter(drugList)
+        adapter = DrugAdapter(prescribedDrugList)
         recyclerView.adapter = adapter
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, drugNames)
@@ -70,24 +79,24 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
             val selectedName = parent.getItemAtPosition(position) as String
-            val selectedDrug = drugList.find { it.name == selectedName }
+            val selectedDrug = prescribedDrugList.find { it.drugName == selectedName }
 
             selectedDrug?.let { drug ->
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Drug Details")
 
                 val message = """
-            Name: ${drug.name}
-            Type: ${drug.type}
+            Name: ${drug.drugName}
+            Type: ${drug.weight}
             Form: ${drug.form}
-            Description: ${drug.description}
+            Description: ${drug.instructions}
         """.trimIndent()
 
                 builder.setMessage(message)
 
                 builder.setPositiveButton("Add") { dialog, _ ->
                     // Add the drug to prescription or list
-                    Toast.makeText(requireContext(), "${drug.name} added", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "${drug.drugName} added", Toast.LENGTH_SHORT)
                         .show()
                     dialog.dismiss()
                 }

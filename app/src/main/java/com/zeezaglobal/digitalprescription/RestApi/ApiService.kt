@@ -9,6 +9,8 @@ import com.zeezaglobal.digitalprescription.DTO.PaymentIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.PaymentMethodPayload
 import com.zeezaglobal.digitalprescription.DTO.PaymentResponse
 import com.zeezaglobal.digitalprescription.DTO.PostApiResponse
+import com.zeezaglobal.digitalprescription.DTO.PrescriptionRequestDTO
+import com.zeezaglobal.digitalprescription.DTO.PrescriptionResponseDTO
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentResponse
@@ -36,8 +38,14 @@ interface ApiService {
     @GET("doctor/getdata/{doctorId}")
     fun getDoctor( @Path("doctorId") doctorId: Long): Call<DoctorResponse>
 
-    @GET("api/prescriptions/patient/{patientId}")
-    suspend fun getPrescriptions(@Path("patientId") patientId: Long): List<Prescription>
+    @POST("api/prescriptions")
+    fun createPrescription(@Body dto: PrescriptionRequestDTO): Call<PrescriptionResponseDTO>
+
+    @GET("api/prescriptions/filter")
+    fun getPrescriptionsByDoctorAndPatient(
+        @Query("doctorId") doctorId: Long,
+        @Query("patientId") patientId: Long
+    ): Call<List<PrescriptionResponseDTO>>
 
 
     @POST("doctor/update")

@@ -50,7 +50,7 @@ class PrescriptionAdapter(private var prescriptions: List<Prescription>) :
         holder.remark.text = prescription.remarks
 
         holder.drugRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-        holder.drugRecyclerView.adapter = DrugAdapter(prescription.drugs)
+        holder.drugRecyclerView.adapter = DrugAdapter(prescription.prescribedDrugs)
         if (holder.drugRecyclerView.itemDecorationCount == 0) {
             val divider = DividerItemDecoration(holder.drugRecyclerView.context, DividerItemDecoration.VERTICAL)
             ContextCompat.getDrawable(holder.drugRecyclerView.context, R.drawable.recycler_divider)?.let {

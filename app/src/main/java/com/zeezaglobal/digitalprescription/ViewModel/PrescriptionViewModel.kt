@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.zeezaglobal.digitalprescription.Entity.Prescription
 import com.zeezaglobal.digitalprescription.Repository.PrescriptionRepository
+import com.zeezaglobal.digitalprescription.SharedPreference.UserId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 
@@ -21,6 +22,6 @@ class PrescriptionViewModel @Inject constructor(
 
     fun fetchPrescriptionsForPatient(patientId: Long) {
         Log.d("PrescriptionViewModel", "Fetching prescriptions for patientId=$patientId")
-        repository.getPrescriptionsForPatient(patientId)
+        repository.getPrescriptionsForPatient(patientId, UserId.getId().toLong())
     }
 }
