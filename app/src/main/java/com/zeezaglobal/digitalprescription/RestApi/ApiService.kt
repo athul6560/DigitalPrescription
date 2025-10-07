@@ -14,6 +14,7 @@ import com.zeezaglobal.digitalprescription.DTO.PrescriptionResponseDTO
 import com.zeezaglobal.digitalprescription.DTO.RegisterData
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentRequest
 import com.zeezaglobal.digitalprescription.DTO.SetupIntentResponse
+import com.zeezaglobal.digitalprescription.Entity.Drug
 import com.zeezaglobal.digitalprescription.Entity.Patient
 import com.zeezaglobal.digitalprescription.Entity.Prescription
 import retrofit2.Call
@@ -75,5 +76,10 @@ interface ApiService {
     fun createSetupIntent(@Body request: SetupIntentRequest): Call<SetupIntentResponse>
 
 
+//Drugs
 
+    @GET("api/drugs/search")
+    suspend fun searchDrugs(
+        @Query("q") keyword: String
+    ): List<Drug>
 }

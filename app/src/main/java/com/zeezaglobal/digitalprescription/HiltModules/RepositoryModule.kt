@@ -1,5 +1,7 @@
 package com.zeezaglobal.digitalprescription.HiltModules
 
+import com.zeezaglobal.digitalprescription.Repository.DrugRepository
+import com.zeezaglobal.digitalprescription.Repository.DrugRepositoryImpl
 import com.zeezaglobal.digitalprescription.Repository.PrescriptionRepository
 import com.zeezaglobal.digitalprescription.Repository.PrescriptionRepositoryImpl
 import com.zeezaglobal.digitalprescription.Repository.StripeRepository
@@ -26,4 +28,12 @@ object RepositoryModule {
     fun providePrescriptionRepository(): PrescriptionRepository {
         return PrescriptionRepositoryImpl()
     }
+
+    @Provides
+
+    fun provideDrugRepository(): DrugRepository {
+        return DrugRepositoryImpl()
+    }
+
+
 }
