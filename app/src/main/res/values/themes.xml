@@ -19,4 +19,23 @@
         <item name="android:textColor">@color/green</item>
         <item name="android:textSize">14sp</item>
     </style>
+    <style name="FullScreenBottomSheetDialog" parent="Theme.Material3.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/FullScreenDialogStyle</item>
+    </style>
+
+    <style name="FullScreenDialogStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:background">@android:color/white</item>
+        <item name="behavior_peekHeight">0dp</item>
+    </style>
+    <style name="CustomAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <!-- Background with rounded corners -->
+        <item name="android:background">@drawable/alert_dialog_background</item>
+        <!-- Optional: animation -->
+        <item name="android:windowAnimationStyle">@style/AlertDialogAnimation</item>
+    </style>
+
+    <style name="AlertDialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 </resources>

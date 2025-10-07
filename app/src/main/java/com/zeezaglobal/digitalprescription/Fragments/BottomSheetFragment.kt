@@ -8,15 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zeezaglobal.digitalprescription.Adapter.DrugAdapter
 import com.zeezaglobal.digitalprescription.Entity.Drug
 import com.zeezaglobal.digitalprescription.R
-
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,10 +52,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         // Observe drugs from ViewModel
         viewModel.drugs.observe(viewLifecycleOwner) { drugs ->
-            // Update RecyclerView if needed
-            //adapter.updateList(drugs)
-
-            // Update dropdown for autocomplete
             val names = drugs.map { it.name ?: "" }
             drugDropdownAdapter?.clear()
             drugDropdownAdapter?.addAll(names)
@@ -74,7 +73,51 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+        autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+            val selectedDrugName = parent.getItemAtPosition(position) as String
+            val selectedDrug = viewModel.drugs.value?.find { it.name == selectedDrugName }
 
+            if (selectedDrug != null) {
+                showDrugDetailsDialog(selectedDrug)
+
+            } else {
+                Toast.makeText(requireContext(), "Drug details not found", Toast.LENGTH_SHORT).show()
+            }
+        }
         return view
     }
+
+    override fun onStart() {
+        super.onStart()
+        val dialog = dialog as? BottomSheetDialog
+        val bottomSheet =
+            dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.let {
+            val behavior = BottomSheetBehavior.from(it)
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.skipCollapsed = true
+            it.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        }
+    }
+
+    override fun getTheme(): Int = R.style.FullScreenBottomSheetDialog
+
+}
+
+private fun BottomSheetFragment.showDrugDetailsDialog(selectedDrug: Drug) {
+    val dialog = BottomSheetDialog(requireContext())
+    val view = layoutInflater.inflate(R.layout.dialog_drug_details, null)
+    dialog.setContentView(view)
+
+    // Example: set data in dialog views
+    val nameView = view.findViewById<TextView>(R.id.drug_name)
+
+    val closeButton = view.findViewById<Button>(R.id.close_button)
+
+    nameView.text = selectedDrug.name ?: "Unknown"
+
+
+    closeButton.setOnClickListener { dialog.dismiss() }
+
+    dialog.show()
 }
